@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="cnr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analiza Ugovora o koncesiji — Aerodromi Podgorica i Tivat</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --bg-elev: #ffffff;
+    --bg-deep: #f1efe8;
+    --ink: #16161a;
+    --ink-2: #44444b;
+    --ink-3: #76767e;
+    --rule: #e4e2db;
+    --rule-strong: #cdcac0;
+    --red: #b53127;
+    --red-bg: #fbeae5;
+    --red-deep: #6e1a14;
+    --yellow: #a07910;
+    --yellow-bg: #fcf3cf;
+    --yellow-deep: #5e470a;
+    --green: #1e6c3d;
+    --green-bg: #e3f1e6;
+    --green-deep: #0f3b21;
+    --accent: #1a3b6e;
+    --gold: #a07910;
+    --serif: 'Source Serif Pro', 'Iowan Old Style', 'Charter', Georgia, 'Times New Roman', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f12;
+      --bg-elev: #18181d;
+      --bg-deep: #0a0a0c;
+      --ink: #f5f4ee;
+      --ink-2: #c8c6bd;
+      --ink-3: #888690;
+      --rule: #2a2a30;
+      --rule-strong: #3d3d45;
+      --red: #ec5b50;
+      --red-bg: #2d1815;
+      --red-deep: #f2837b;
+      --yellow: #d4a829;
+      --yellow-bg: #2a2210;
+      --yellow-deep: #e8c25a;
+      --green: #4ea66a;
+      --green-bg: #14271a;
+      --green-deep: #7dca96;
+      --accent: #6e9bd6;
+      --gold: #d4a829;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .narrow { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 720px) { .wrap, .narrow { padding: 0 20px; } }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 96px 0 64px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    background:
+      radial-gradient(circle at 80% 10%, rgba(181, 49, 39, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(26, 59, 110, 0.04) 0%, transparent 50%);
+  }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .kicker span.dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    margin: 0 10px;
+    vertical-align: middle;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(40px, 6vw, 76px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .hero h1 .underline {
+    background: linear-gradient(180deg, transparent 65%, rgba(181, 49, 39, 0.18) 65%);
+    padding: 0 4px;
+  }
+  .hero .deck {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-style: italic;
+    color: var(--ink-2);
+    max-width: 800px;
+    line-height: 1.4;
+    margin-bottom: 48px;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap;
+    gap: 32px; align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+  .hero-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ============ VERDICT BOX ============ */
+  .verdict {
+    margin: 64px auto;
+    padding: 40px 48px;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--red);
+    max-width: 1180px;
+    width: calc(100% - 64px);
+  }
+  .verdict .v-label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .verdict p {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .verdict p + p { margin-top: 16px; font-size: 18px; color: var(--ink-2); }
+
+  /* ============ STATS GRID ============ */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    margin: 64px 0;
+    border: 1px solid var(--rule);
+  }
+  .stat {
+    background: var(--bg);
+    padding: 28px 24px;
+    transition: background 0.2s;
+  }
+  .stat:hover { background: var(--bg-elev); }
+  .stat .label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .stat .value {
+    font-family: var(--serif);
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .stat .value .unit { font-size: 18px; color: var(--ink-3); margin-left: 4px; }
+  .stat .desc { font-size: 12px; color: var(--ink-3); line-height: 1.4; }
+  .stat.danger .value { color: var(--red); }
+  .stat.danger .label { color: var(--red); }
+
+  /* ============ SECTIONS ============ */
+  section { padding: 80px 0; }
+  section.alt { background: var(--bg-deep); }
+  .sec-head { margin-bottom: 48px; }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+  }
+  .sec-title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .sec-desc {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--ink-2);
+    line-height: 1.5;
+    max-width: 720px;
+  }
+
+  /* ============ HEATMAP ============ */
+  .heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .h-card {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 20px;
+    background: var(--bg-elev);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    position: relative;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    width: 100%;
+  }
+  .h-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border-color: var(--rule-strong);
+  }
+  .h-card.red { border-left: 4px solid var(--red); }
+  .h-card.yellow { border-left: 4px solid var(--yellow); }
+  .h-card.green { border-left: 4px solid var(--green); }
+  .h-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .h-code .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .h-card.red .h-code .pill { background: var(--red-bg); color: var(--red); }
+  .h-card.yellow .h-code .pill { background: var(--yellow-bg); color: var(--yellow); }
+  .h-card.green .h-code .pill { background: var(--green-bg); color: var(--green); }
+  .h-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .h-clause {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+
+  /* ============ DEEP DIVE ============ */
+  .deep-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .deep {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 40px;
+    position: relative;
+  }
+  @media (max-width: 720px) { .deep { padding: 24px; } }
+  .deep::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--red);
+  }
+  .deep-num {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 400;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .deep-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .deep-title {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .deep-body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin-bottom: 24px;
+  }
+  .deep-quote {
+    border-left: 3px solid var(--rule-strong);
+    padding: 12px 0 12px 20px;
+    margin: 24px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-2);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .deep-impact {
+    background: var(--red-bg);
+    border-left: 3px solid var(--red);
+    padding: 16px 20px;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--red-deep);
+  }
+  .deep-impact strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ============ MONEY FLOW ============ */
+  .flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 800px) { .flow-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .flow-side h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .flow-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .flow-row .l { color: var(--ink-2); font-size: 15px; }
+  .flow-row .v { font-family: var(--mono); font-size: 16px; color: var(--ink); font-weight: 500; }
+  .flow-row.total { border-bottom: 2px solid var(--ink); border-top: 1px solid var(--ink); padding: 16px 0; margin-top: 8px; }
+  .flow-row.total .l, .flow-row.total .v { font-weight: 600; color: var(--ink); }
+  .flow-row.bad .v { color: var(--red); }
+  .flow-row.good .v { color: var(--green); }
+
+  /* ============ RISK BAR ============ */
+  .risk-scale {
+    margin-top: 32px;
+    padding: 32px 0;
+  }
+  .risk-bar {
+    position: relative;
+    height: 48px;
+    background: linear-gradient(90deg, var(--green) 0%, var(--yellow) 50%, var(--red) 100%);
+    border-radius: 4px;
+    margin: 24px 0 12px;
+  }
+  .risk-marker {
+    position: absolute;
+    top: -8px;
+    width: 2px;
+    height: 64px;
+    background: var(--ink);
+  }
+  .risk-marker::after {
+    content: attr(data-label);
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--ink);
+    white-space: nowrap;
+    background: var(--bg);
+    padding: 2px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .risk-axis {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink-3);
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+  }
+
+  /* ============ TIMELINE ============ */
+  .timeline {
+    margin-top: 40px;
+    position: relative;
+  }
+  .tl-line {
+    position: relative;
+    height: 8px;
+    background: var(--rule);
+    border-radius: 4px;
+    margin: 80px 0 40px;
+  }
+  .tl-segment {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--red);
+    opacity: 0.7;
+  }
+  .tl-marker {
+    position: absolute;
+    top: -8px;
+    width: 24px; height: 24px;
+    background: var(--bg);
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .tl-marker .annot {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .tl-marker.above .annot { top: auto; bottom: 32px; }
+  .tl-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .tl-legend {
+    display: flex; gap: 32px;
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .tl-legend-dot {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ============ TIERS ============ */
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .tiers { grid-template-columns: 1fr; } }
+  .tier {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 32px 28px;
+    position: relative;
+  }
+  .tier-1 { border-top: 4px solid var(--red); }
+  .tier-2 { border-top: 4px solid var(--yellow); }
+  .tier-3 { border-top: 4px solid var(--green); }
+  .tier-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .tier-1 .tier-label { color: var(--red); }
+  .tier-2 .tier-label { color: var(--yellow); }
+  .tier-3 .tier-label { color: var(--green); }
+  .tier h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .tier p {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+  .tier-count {
+    font-family: var(--serif);
+    font-size: 48px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .tier ul { list-style: none; }
+  .tier li {
+    padding: 8px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--ink-2);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .tier li:first-child { border-top: none; padding-top: 16px; margin-top: 8px; border-top: 2px solid var(--ink); }
+  .tier li code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    background: var(--bg-deep);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* ============ ACTIONS ============ */
+  .action-list {
+    counter-reset: action;
+  }
+  .action-item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .action-item:last-child { border-bottom: 1px solid var(--rule); }
+  .action-item::before {
+    counter-increment: action;
+    content: counter(action, decimal-leading-zero);
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--ink-3);
+    line-height: 1;
+    font-weight: 400;
+  }
+  .action-item h4 {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .action-item p {
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  /* ============ MODAL ============ */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 18, 0.65);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    overflow-y: auto;
+    padding: 48px 24px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    max-width: 760px;
+    width: 100%;
+    padding: 48px;
+    position: relative;
+  }
+  @media (max-width: 720px) { .modal { padding: 28px; } }
+  .modal.red { border-top: 4px solid var(--red); }
+  .modal.yellow { border-top: 4px solid var(--yellow); }
+  .modal.green { border-top: 4px solid var(--green); }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: 1px solid var(--rule);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--ink-2);
+    line-height: 1;
+  }
+  .modal-close:hover { background: var(--bg-deep); }
+  .modal-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    margin-bottom: 12px;
+  }
+  .modal.red .modal-tag { color: var(--red); }
+  .modal.yellow .modal-tag { color: var(--yellow); }
+  .modal.green .modal-tag { color: var(--green); }
+  .modal-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .modal-clause {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-bottom: 28px;
+  }
+  .modal-section { margin: 24px 0; }
+  .modal-section h5 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+  }
+  .modal-text {
+    color: var(--ink-2);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  .modal-current {
+    background: var(--bg-deep);
+    border-left: 3px solid var(--ink-3);
+    padding: 14px 18px;
+    font-style: italic;
+    font-family: var(--serif);
+  }
+  .modal-redline {
+    background: var(--green-bg);
+    border-left: 3px solid var(--green);
+    padding: 14px 18px;
+    color: var(--green-deep);
+  }
+  .modal-impact {
+    background: var(--red-bg);
+    border-left: 3px solid var(--red);
+    padding: 14px 18px;
+    color: var(--red-deep);
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--rule);
+    padding: 56px 0;
+    margin-top: 80px;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--ink-3);
+    max-width: 720px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  footer strong { color: var(--ink-2); }
+  .foot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .foot-meta a {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .foot-meta a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ============ UTIL ============ */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+  a.skip { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); }
+  a.skip:hover { border-bottom-style: solid; }
+  .pull {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.4;
+    color: var(--ink);
+    padding: 32px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    margin: 48px 0;
+    font-style: italic;
+  }
+  .pull::before { content: '"'; font-size: 64px; line-height: 0; vertical-align: -16px; color: var(--red); margin-right: 8px; }
+
+  /* ============ PROBLEM U SLIKAMA / VIZUALI ============ */
+  .viz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  @media (max-width: 800px) { .viz-grid { grid-template-columns: 1fr; gap: 16px; } }
+  .viz {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 32px 28px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .viz:hover { border-color: var(--rule-strong); }
+  .viz.span-2 { grid-column: span 2; }
+  @media (max-width: 800px) { .viz.span-2 { grid-column: span 1; } }
+  .viz-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+  }
+  .viz-title {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.8vw, 22px);
+    line-height: 1.25;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+  .viz-svg-wrap { margin: 8px 0 4px; width: 100%; }
+  .viz-svg-wrap svg { display: block; width: 100%; height: auto; }
+  .viz-caption {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-3);
+  }
+  .viz-caption strong { color: var(--ink-2); font-weight: 600; }
+  .viz-caption em { color: var(--ink-2); font-style: italic; }
+  /* SVG typography helpers — used inside .viz svg only */
+  .viz svg .ff-mono { font-family: var(--mono); letter-spacing: 0.12em; fill: var(--ink-3); }
+  .viz svg .ff-sans { font-family: var(--sans); fill: var(--ink-2); }
+  .viz svg .ff-serif { font-family: var(--serif); fill: var(--ink); }
+  .viz svg .ff-serif-red { font-family: var(--serif); fill: var(--red); font-weight: 400; }
+</style>
+</head>
+<body>
+
+<!-- ============================================== HERO ============================================== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Nezavisna analiza<span class="dot"></span>Maj 2026<span class="dot"></span>U javnom interesu</div>
+    <h1>Ko će upravljati <span class="underline">aerodromima Crne Gore</span> narednih 30 godina — i pod kojim uslovima?</h1>
+    <p class="deck">Pregled klauzula iz Nacrta Ugovora o koncesiji za Podgoricu i Tivat. Šta država dobija, šta ustupa, i koliko košta greška.</p>
+    <div class="hero-meta">
+      <span><strong>Predmet:</strong> Predlog Vlade Crne Gore</span>
+      <span><strong>Koncesionar:</strong> Incheon Airport Consortium (IIAC + KIND)</span>
+      <span><strong>Trajanje:</strong> 30 godina</span>
+      <span><strong>Klauzula:</strong> 66 članova + 23 priloga</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================== VERDICT ============================================== -->
+<div class="verdict">
+  <div class="v-label">★ Glavna ocjena</div>
+  <p>Nacrt Ugovora donosi <strong>100 miliona avansa</strong> i <strong>132 miliona inicijalnih investicija</strong> — ali ugrađuje i klauzule koje u najgorem scenariju mogu izložiti državu obavezi naknade od <strong>500 do 700 miliona EUR</strong>, uz neopozivo odricanje od suverenog imuniteta.</p>
+  <p>Deset crvenih klauzula traži renegotiation prije potpisa. Pet od njih — javni jezik, monopol nad aerodromima, suvereni imunitet, raskid iz „razloga javne politike" i imovinski sporovi u Tivtu — su crvena linija javnog interesa.</p>
+</div>
+
+<!-- ============================================== STATS ============================================== -->
+<div class="wrap">
+<div class="stats">
+  <div class="stat">
+    <div class="label">Trajanje</div>
+    <div class="value">30<span class="unit">god</span></div>
+    <div class="desc">7-8 saziva Skupštine</div>
+  </div>
+  <div class="stat">
+    <div class="label">Avansna naknada</div>
+    <div class="value">100<span class="unit">M €</span></div>
+    <div class="desc">U roku 30 dana od zaključenja</div>
+  </div>
+  <div class="stat">
+    <div class="label">Inicijalna ulaganja</div>
+    <div class="value">132<span class="unit">M €</span></div>
+    <div class="desc">Prema ponudi Incheona</div>
+  </div>
+  <div class="stat">
+    <div class="label">Procenat naknade</div>
+    <div class="value">35,21<span class="unit">%</span></div>
+    <div class="desc">Bruto prihoda, polugodišnje</div>
+  </div>
+  <div class="stat">
+    <div class="label">Vrijednost imovine</div>
+    <div class="value">257<span class="unit">M €</span></div>
+    <div class="desc">Zemljište + objekti</div>
+  </div>
+  <div class="stat danger">
+    <div class="label">Maksimalni rizik</div>
+    <div class="value">500-700<span class="unit">M €</span></div>
+    <div class="desc">Plaćanja prilikom raskida</div>
+  </div>
+  <div class="stat danger">
+    <div class="label">Garancije Vlade</div>
+    <div class="value">15<span class="unit">M €</span></div>
+    <div class="desc">Za 1,4 milijarde imovine</div>
+  </div>
+  <div class="stat">
+    <div class="label">IRR cilj</div>
+    <div class="value">12,27<span class="unit">%</span></div>
+    <div class="desc">Sopstveni kapital, bazni</div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================== HEATMAP ============================================== -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">01 / Registar odstupanja</div>
+      <h2 class="sec-title">20 klauzula. Dvije kategorije. Kliknite da otvorite.</h2>
+      <p class="sec-desc">Svaka kartica vodi do punog citata, predložene redakcije, dubinskog obrazloženja sa pravnim presedanima i procjene fiskalnog uticaja.</p>
+    </div>
+
+    <h3 style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); margin-bottom: 16px;">10 crvenih signala — eskalacija prije potpisa</h3>
+    <div class="heatmap" id="reds"></div>
+
+    <h3 style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--yellow); margin: 48px 0 16px;">10 žutih signala — predmet pregovora</h3>
+    <div class="heatmap" id="yellows"></div>
+  </div>
+</section>
+
+<!-- ============================================== TOP 5 DEEP DIVE ============================================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">02 / Pet crvenih linija</div>
+      <h2 class="sec-title">Klauzule bez kojih posao ne smije biti potpisan.</h2>
+      <p class="sec-desc">Ovih pet stavki nije pitanje pregovaračke nijanse — to su pitanja suvereniteta, javnog interesa i fiskalne sigurnosti.</p>
+    </div>
+
+    <div class="deep-grid">
+      <div class="deep">
+        <div class="deep-num">01</div>
+        <div class="deep-label">Suvereni imunitet · Čl. 51.1.3</div>
+        <h3 class="deep-title">Crna Gora se neopozivo odriče imuniteta — svuda, prema svemu.</h3>
+        <div class="deep-body">Aktuelna formulacija je najagresivnija u međunarodnoj JPP praksi: država se odriče imuniteta od tužbe, presude i izvršenja, u <em>svakoj jurisdikciji</em>, bez izuzetka za diplomatsku, vojnu ili kulturnu imovinu. Standard OECD zemalja je odricanje samo nad komercijalnom imovinom.</div>
+        <div class="deep-quote">U slučaju arbitražnog gubitka, Koncesionar bi teoretski mogao zaplijeniti račune ambasada, devizne rezerve Centralne banke ili kulturne predmete u inostranstvu — presedan: NML Capital protiv Argentine.</div>
+        <div class="deep-impact"><strong>Procijenjeni rizik</strong>100-500M EUR u najgorem scenariju gubitka u međunarodnoj arbitraži.</div>
+      </div>
+
+      <div class="deep">
+        <div class="deep-num">02</div>
+        <div class="deep-label">Monopol aerodroma · Čl. 35.1.2(b)</div>
+        <h3 class="deep-title">Zabrana izgradnje novih međunarodnih aerodroma — 30 godina.</h3>
+        <div class="deep-body">Klauzula definiše izgradnju bilo kog novog komercijalnog aerodroma u Crnoj Gori — osim u Beranama, Ulcinju i Nikšiću — kao <em>Značajnu nepovoljnu mjeru države</em>. To znači da bi razvoj aerodroma u Cetinju, na primorju ili na sjeveru aktivirao kompenzaciju Koncesionaru u rangu raskida.</div>
+        <div class="deep-quote">Praktično, ovo nije klauzula nekonkurencije — to je <strong>ustavna brava</strong> nad budućim planiranjem vazdušnog saobraćaja. Suverena odluka države o vlastitoj infrastrukturi se ustupa na 30 godina.</div>
+        <div class="deep-impact"><strong>Procijenjeni rizik</strong>500M+ EUR ako bilo koji budući parlament odluči razvijati nove kapacitete.</div>
+      </div>
+
+      <div class="deep">
+        <div class="deep-num">03</div>
+        <div class="deep-label">Jezik Ugovora · Čl. 58</div>
+        <h3 class="deep-title">Engleska verzija preovladava nad crnogorskom.</h3>
+        <div class="deep-body">Ustav Crne Gore, član 13: „U Crnoj Gori je u službenoj upotrebi crnogorski jezik." Nacrt Ugovora ovo direktno potkopava — sve nesaglasnosti se rješavaju u korist engleskog teksta. Hrvatska je Koncesiju aerodroma Zagreb potpisala sa <em>obje verzije autentične</em>. Bugarska i Albanija su nacionalni jezik postavile kao prevladavajući.</div>
+        <div class="deep-impact"><strong>Sistemska posljedica</strong>Tumačenje u korist Koncesionara u svim sporovima tokom 30 godina — uključujući domaće sudove kada se primjenjuju prinudne odredbe MNE prava.</div>
+      </div>
+
+      <div class="deep">
+        <div class="deep-num">04</div>
+        <div class="deep-label">Raskid SPV-a · Čl. 41.1(d)</div>
+        <h3 class="deep-title">Koncesionar može raskinuti Ugovor iz „razloga javne politike".</h3>
+        <div class="deep-body">Termin „razlozi javne politike" nije definisan ni u jednom članu Nacrta. Konzorcijum može jednostrano proglasiti da neka odluka Vlade, Skupštine ili regulatora čini „javnu politiku" — i raskinuti Ugovor uz punu naknadu po Prilogu 10. To uključuje: <em>100% senior duga + inicijalni sopstveni kapital + 3 godine očekivanog povrata kapitala + otpremnine + troškove podizvođača</em>.</div>
+        <div class="deep-quote">Ovo je jedna od najopasnijih klauzula u Nacrtu jer kombinuje tri svojstva: jednostrana je, nedefinisana, i skupa. Daje Koncesionaru opciju izlaska sa skoro pune kompenzacije, u trenutku po njegovom izboru.</div>
+        <div class="deep-impact"><strong>Procijenjeni rizik</strong>300-700M EUR u slučaju neprecizirane političke promjene koju Koncesionar interpretira kao osnov za raskid.</div>
+      </div>
+
+      <div class="deep">
+        <div class="deep-num">05</div>
+        <div class="deep-label">Tivat imovinski sporovi · Predlog + Čl. 39.2.3</div>
+        <h3 class="deep-title">Vlada svjesno potpisuje sa neriješenim sporovima.</h3>
+        <div class="deep-body">Sam Predlog Vlade priznaje da na priobalnom području Tivta postoji „značajan broj neriješenih imovinsko-pravnih sporova" koji „mogu da ugroze dinamiku izvršenja ugovorenih obaveza, odnosno posljedično i da izazovu eventualno aktiviranje raskidnih klauzula i odštetnih zahtjeva". Nacrt na to odgovara — članom 39.2.3 daje državi 8 mjeseci period otklanjanja za imovinske sporove (umjesto standardnih 60 dana).</div>
+        <div class="deep-quote">Drugim riječima: Ugovor je već dizajniran sa očekivanjem da država neće moći mirno upravljati svojim koncesionim područjem — što transformiše tu izvjesnost u fiskalnu obavezu.</div>
+        <div class="deep-impact"><strong>Procijenjeni rizik</strong>Vjerovatnoća aktiviranja 40-60% u prvih 10 godina · očekivana obaveza 300-500M EUR.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== PROBLEM U SLIKAMA ============================================== -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">03 / Problem u slikama</div>
+      <h2 class="sec-title">Šest pogleda. Jedan ugovor.</h2>
+      <p class="sec-desc">Brojevi prevedeni u proporcije — onako kako rizik izgleda kada se izvuče iz pravnih formulacija i položi na sto.</p>
+    </div>
+
+    <div class="viz-grid">
+
+      <!-- =========== V1 ASIMETRIJA EKONOMIJE — span 2 =========== -->
+      <div class="viz span-2">
+        <div class="viz-num">01 · Asimetrija ekonomije</div>
+        <h3 class="viz-title">Jedan trigger event briše dvije decenije prihoda.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Poređenje prosječnog godišnjeg prihoda i mogućeg jednokratnog tereta">
+            <line x1="220" y1="34" x2="220" y2="200" stroke="var(--rule)" stroke-width="1"/>
+
+            <text x="210" y="55" text-anchor="end" class="ff-sans" font-size="12">Prosječan</text>
+            <text x="210" y="71" text-anchor="end" class="ff-sans" font-size="12">godišnji prihod</text>
+            <text x="210" y="89" text-anchor="end" class="ff-mono" font-size="10">770M / 30 GOD.</text>
+
+            <rect x="220" y="50" width="22" height="40" fill="var(--green)" opacity="0.92"/>
+            <text x="252" y="78" class="ff-serif" font-size="24">25M €</text>
+
+            <text x="210" y="138" text-anchor="end" class="ff-sans" font-size="12">Mogući jednokratni</text>
+            <text x="210" y="154" text-anchor="end" class="ff-sans" font-size="12">teret pri raskidu</text>
+            <text x="210" y="172" text-anchor="end" class="ff-mono" font-size="10">PRILOG 10</text>
+
+            <rect x="220" y="133" width="560" height="40" fill="var(--red)" opacity="0.92"/>
+            <text x="500" y="161" text-anchor="middle" class="ff-serif" font-size="24" fill="#ffffff">500 – 700M €</text>
+
+            <text x="500" y="215" text-anchor="middle" class="ff-mono" font-size="10">DVIJE OBAVEZE NA ISTOJ SKALI · ODNOS DO 28 : 1</text>
+          </svg>
+        </div>
+        <div class="viz-caption">Posao nominalno donosi <strong>~770M EUR kroz 30 godina</strong> — u prosjeku 25M godišnje. Ali jedan trigger event (raskid iz „javne politike", spor u Tivtu, gubitak međunarodne arbitraže) može odjednom iznijeti <strong>od 20 do 28 godina prosječnog prihoda</strong>.</div>
+      </div>
+
+      <!-- =========== V2 GARANCIJE 1% =========== -->
+      <div class="viz">
+        <div class="viz-num">02 · Garancije vs. imovina</div>
+        <h3 class="viz-title">Pokrivenost: jedan procenat.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Garancije pokrivaju oko jedan procenat vrijednosti imovine">
+            <text x="180" y="58" text-anchor="middle" class="ff-serif-red" font-size="54">1,07%</text>
+            <text x="180" y="80" text-anchor="middle" class="ff-mono" font-size="10">POKRIVENOST IMOVINE</text>
+
+            <circle cx="180" cy="200" r="90" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/>
+            <text x="180" y="128" text-anchor="middle" class="ff-mono" font-size="10">1,4 MLRD €  ·  IMOVINA + CAPEX</text>
+
+            <circle cx="180" cy="200" r="9" fill="var(--red)"/>
+            <text x="180" y="226" text-anchor="middle" class="ff-mono" font-size="10" fill="var(--red)">15M €  ·  GARANCIJE</text>
+          </svg>
+        </div>
+        <div class="viz-caption">World Bank standard za aerodromske JPP koncesije: <strong>20–30% inicijalne CAPEX</strong>. Sofia 22,7% · Zagreb 25,6% · Tirana 25,5% · <strong>Crna Gora 6,1%</strong>. Garancije ne pokrivaju ni potencijalnu obavezu Vlade prilikom raskida.</div>
+      </div>
+
+      <!-- =========== V3 ASIMETRIJA OBAVEZA 7:1 =========== -->
+      <div class="viz">
+        <div class="viz-num">03 · Asimetrija obaveza</div>
+        <h3 class="viz-title">Vlada ima dva razloga. SPV ima četrnaest.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Asimetrija slučajeva neizvršenja obaveza">
+            <text x="93" y="32" text-anchor="middle" class="ff-mono" font-size="10">SPV NEIZVRŠENJE</text>
+            <text x="275" y="32" text-anchor="middle" class="ff-mono" font-size="10">DRŽAVA NEIZVRŠENJE</text>
+
+            <g fill="var(--red)" opacity="0.92">
+              <rect x="64" y="50" width="22" height="22"/><rect x="90" y="50" width="22" height="22"/><rect x="116" y="50" width="22" height="22"/>
+              <rect x="64" y="76" width="22" height="22"/><rect x="90" y="76" width="22" height="22"/><rect x="116" y="76" width="22" height="22"/>
+              <rect x="64" y="102" width="22" height="22"/><rect x="90" y="102" width="22" height="22"/><rect x="116" y="102" width="22" height="22"/>
+              <rect x="64" y="128" width="22" height="22"/><rect x="90" y="128" width="22" height="22"/><rect x="116" y="128" width="22" height="22"/>
+              <rect x="64" y="154" width="22" height="22"/><rect x="90" y="154" width="22" height="22"/>
+            </g>
+
+            <g fill="var(--ink)">
+              <rect x="264" y="50" width="22" height="22"/>
+              <rect x="264" y="76" width="22" height="22"/>
+            </g>
+
+            <g fill="none" stroke="var(--rule)" stroke-width="0.75" stroke-dasharray="2 2">
+              <rect x="264" y="102" width="22" height="22"/>
+              <rect x="264" y="128" width="22" height="22"/>
+              <rect x="264" y="154" width="22" height="22"/>
+              <rect x="290" y="50" width="22" height="22"/>
+              <rect x="290" y="76" width="22" height="22"/>
+              <rect x="290" y="102" width="22" height="22"/>
+              <rect x="290" y="128" width="22" height="22"/>
+              <rect x="290" y="154" width="22" height="22"/>
+            </g>
+
+            <line x1="40" y1="210" x2="320" y2="210" stroke="var(--rule)" stroke-width="1"/>
+
+            <text x="180" y="260" text-anchor="middle" class="ff-serif" font-size="46">7 : 1</text>
+            <text x="180" y="288" text-anchor="middle" class="ff-mono" font-size="10">14 KATEGORIJA · 2 KATEGORIJE</text>
+          </svg>
+        </div>
+        <div class="viz-caption">Standard u regionu ~<strong>2,2 : 1</strong>. Zagreb 2,25 · Sofia 2,2 · Tirana 2,5 · Beograd 2,4. Crna Gora bi imala <strong>najveću asimetriju neizvršenja u regionu</strong> — SPV dobija sedam puta više osnova za raskid od države.</div>
+      </div>
+
+      <!-- =========== V4 SUVERENI IMUNITET =========== -->
+      <div class="viz">
+        <div class="viz-num">04 · Suvereni imunitet</div>
+        <h3 class="viz-title">Neopozivo odricanje. Sve postaje ranjivo.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kategorije državne imovine bez imuniteta">
+            <text x="180" y="22" text-anchor="middle" class="ff-mono" font-size="10">IMOVINA BEZ ZAŠTITE OD IZVRŠENJA</text>
+
+            <g transform="translate(20,44)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Diplomatska</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">imovina · ambasade</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+
+            <g transform="translate(190,44)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Vojna imovina</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">i objekti</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+
+            <g transform="translate(20,132)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Kulturna</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">baština</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+
+            <g transform="translate(190,132)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Devizne rezerve</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">Centralne banke</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+
+            <g transform="translate(20,220)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Računi javnih</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">institucija u inostranstvu</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+
+            <g transform="translate(190,220)">
+              <rect width="150" height="78" fill="var(--bg-deep)" stroke="var(--rule-strong)" stroke-width="1"/>
+              <text x="75" y="38" text-anchor="middle" class="ff-sans" font-size="11">Sva državna imovina</text>
+              <text x="75" y="54" text-anchor="middle" class="ff-sans" font-size="11">u svakoj jurisdikciji</text>
+              <line x1="12" y1="12" x2="138" y2="66" stroke="var(--red)" stroke-width="1.5" opacity="0.85"/>
+            </g>
+          </svg>
+        </div>
+        <div class="viz-caption">Standard OECD zemalja je <em>restrictive immunity doctrine</em> — odricanje samo nad komercijalnom imovinom. Nacrt ide dalje: <strong>neopozivo odricanje od svega, u svakoj jurisdikciji</strong>. Presedan: <em>NML Capital v. Argentina</em> (pljenidba broda Libertad u Gani, 2012).</div>
+      </div>
+
+      <!-- =========== V5 KASKADA RASKIDA =========== -->
+      <div class="viz">
+        <div class="viz-num">05 · Anatomija raskida</div>
+        <h3 class="viz-title">Pet riječi. Sedam stavki. Sedamsto miliona.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kaskada raskida iz razloga javne politike">
+            <rect x="36" y="14" width="288" height="58" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text x="180" y="39" text-anchor="middle" class="ff-serif-red" font-size="15">„Razlozi javne politike"</text>
+            <text x="180" y="57" text-anchor="middle" class="ff-mono" font-size="10">NEDEFINISAN POJAM · JEDNOSTRAN OKIDAČ</text>
+
+            <line x1="180" y1="78" x2="180" y2="102" stroke="var(--ink-2)" stroke-width="1.5"/>
+            <polygon points="180,109 173,100 187,100" fill="var(--ink-2)"/>
+
+            <g fill="var(--ink-2)">
+              <text x="48" y="132" class="ff-sans" font-size="12">+ 100% senior duga</text>
+              <text x="48" y="154" class="ff-sans" font-size="12">+ inicijalni sopstveni kapital</text>
+              <text x="48" y="176" class="ff-sans" font-size="12">+ 3 godine očekivanog povrata</text>
+              <text x="48" y="198" class="ff-sans" font-size="12">+ otpremnine zaposlenih</text>
+              <text x="48" y="220" class="ff-sans" font-size="12">+ troškovi podizvođača</text>
+              <text x="48" y="242" class="ff-sans" font-size="12">+ troškovi prenosa</text>
+              <text x="48" y="264" class="ff-sans" font-size="12">+ uvećanje za poreze (~10%)</text>
+            </g>
+
+            <line x1="36" y1="280" x2="324" y2="280" stroke="var(--ink)" stroke-width="1.5"/>
+
+            <text x="180" y="316" text-anchor="middle" class="ff-serif-red" font-size="32">300 – 700M €</text>
+            <text x="180" y="340" text-anchor="middle" class="ff-mono" font-size="10">JEDNOKRATNA OBAVEZA DRŽAVE</text>
+          </svg>
+        </div>
+        <div class="viz-caption">Termin <em>„razlozi javne politike"</em> (čl. 41.1(d)) <strong>nije definisan ni u jednom članu Nacrta</strong>. Daje Koncesionaru jednostrano pravo izlaska iz Ugovora u trenutku po njegovom izboru — uz punu kompenzaciju po Prilogu 10.</div>
+      </div>
+
+      <!-- =========== V6 30-GODIŠNJA KRIVULJA RIZIKA — span 2 =========== -->
+      <div class="viz span-2">
+        <div class="viz-num">06 · Krivulja rizika kroz 30 godina</div>
+        <h3 class="viz-title">Tri vrha. Tri momenta kada se ugovor nateže.</h3>
+        <div class="viz-svg-wrap">
+          <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Distribucija rizika kroz 30 godina koncesije">
+            <line x1="60" y1="200" x2="780" y2="200" stroke="var(--rule)" stroke-width="1"/>
+
+            <path d="M 60 200
+                     C 70 90, 82 78, 100 96
+                     C 130 130, 170 178, 210 192
+                     C 260 198, 300 168, 340 110
+                     C 380 60, 420 60, 460 100
+                     C 500 140, 540 178, 590 192
+                     C 640 198, 680 168, 720 116
+                     C 750 76, 770 58, 780 52
+                     L 780 200 Z"
+                  fill="var(--red)" opacity="0.14"/>
+
+            <path d="M 60 200
+                     C 70 90, 82 78, 100 96
+                     C 130 130, 170 178, 210 192
+                     C 260 198, 300 168, 340 110
+                     C 380 60, 420 60, 460 100
+                     C 500 140, 540 178, 590 192
+                     C 640 198, 680 168, 720 116
+                     C 750 76, 770 58, 780 52"
+                  stroke="var(--red)" stroke-width="1.75" fill="none"/>
+
+            <circle cx="90" cy="84" r="4" fill="var(--red)"/>
+            <circle cx="400" cy="60" r="4" fill="var(--red)"/>
+            <circle cx="770" cy="54" r="4" fill="var(--red)"/>
+
+            <line x1="90" y1="84" x2="90" y2="42" stroke="var(--rule-strong)" stroke-width="0.75"/>
+            <text x="90" y="34" text-anchor="middle" class="ff-mono" font-size="10">GOD. 0–2</text>
+            <text x="90" y="22" text-anchor="middle" class="ff-mono" font-size="10">SETUP</text>
+            <text x="90" y="222" text-anchor="middle" class="ff-sans" font-size="11">Tivat sporovi · Faza I</text>
+
+            <line x1="400" y1="60" x2="400" y2="22" stroke="var(--rule-strong)" stroke-width="0.75"/>
+            <text x="400" y="14" text-anchor="middle" class="ff-mono" font-size="10">GOD. 10–15 · VRH</text>
+            <text x="400" y="222" text-anchor="middle" class="ff-sans" font-size="11">EU acquis · pristupanje · gross-up</text>
+
+            <line x1="770" y1="54" x2="770" y2="22" stroke="var(--rule-strong)" stroke-width="0.75"/>
+            <text x="778" y="14" text-anchor="end" class="ff-mono" font-size="10">GOD. 28–30</text>
+            <text x="778" y="222" text-anchor="end" class="ff-sans" font-size="11">povratni prenos · stanje imovine</text>
+
+            <g text-anchor="middle">
+              <text x="60" y="248" class="ff-mono" font-size="10">0</text>
+              <text x="180" y="248" class="ff-mono" font-size="10">5</text>
+              <text x="300" y="248" class="ff-mono" font-size="10">10</text>
+              <text x="420" y="248" class="ff-mono" font-size="10">15</text>
+              <text x="540" y="248" class="ff-mono" font-size="10">20</text>
+              <text x="660" y="248" class="ff-mono" font-size="10">25</text>
+              <text x="780" y="248" class="ff-mono" font-size="10">30</text>
+            </g>
+            <text x="420" y="270" text-anchor="middle" class="ff-mono" font-size="10">GODINE KONCESIJE</text>
+          </svg>
+        </div>
+        <div class="viz-caption">Rizik nije ravnomjerno raspoređen. <strong>Prvih 24 mjeseca</strong> nose imovinske sporove u Tivtu i tehničku Fazu I. <strong>10–15. godina</strong> je vrh — EU pristupanje aktivira talas transpozicija acquis-a, svaka aktivira klauzulu o uvećanju za poreze. <strong>Posljednje dvije godine</strong> nose rizik zapuštene imovine pri povratnom prenosu.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== MONEY FLOW ============================================== -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">04 / Ekonomska ravnoteža</div>
+      <h2 class="sec-title">Šta ulazi, a šta može da izađe.</h2>
+      <p class="sec-desc">Nominalno, posao je u korist države. Ali ekstremni rizik je nesimetrično raspoređen — i tu se računa.</p>
+    </div>
+
+    <div class="flow-grid">
+      <div class="flow-side">
+        <h3>Šta država dobija</h3>
+        <div class="flow-row good">
+          <div class="l">Avansna koncesiona naknada</div>
+          <div class="v">100M €</div>
+        </div>
+        <div class="flow-row good">
+          <div class="l">Inicijalni investicioni program (CAPEX)</div>
+          <div class="v">132M €</div>
+        </div>
+        <div class="flow-row good">
+          <div class="l">Procenat naknade na bruto prihod</div>
+          <div class="v">35,21%</div>
+        </div>
+        <div class="flow-row good">
+          <div class="l">Godišnja naknada (procjena ø)</div>
+          <div class="v">~18M €</div>
+        </div>
+        <div class="flow-row good">
+          <div class="l">Garancije (zatvaranje + izvršenje + dobro izv.)</div>
+          <div class="v">15M €</div>
+        </div>
+        <div class="flow-row total good">
+          <div class="l">Očekivani prihod (30 god.)</div>
+          <div class="v">~770M €</div>
+        </div>
+      </div>
+
+      <div class="flow-side">
+        <h3>Šta država može izgubiti</h3>
+        <div class="flow-row bad">
+          <div class="l">Raskid iz „javne politike" (Prilog 10 · 1.2)</div>
+          <div class="v">~500M €</div>
+        </div>
+        <div class="flow-row bad">
+          <div class="l">EU acquis transpozicija (30 god.)</div>
+          <div class="v">~100M €</div>
+        </div>
+        <div class="flow-row bad">
+          <div class="l">Porez · uvećanje za poreze (10-15% iznad nominale)</div>
+          <div class="v">~50-75M €</div>
+        </div>
+        <div class="flow-row bad">
+          <div class="l">Tivat sporovi · kompenzacija</div>
+          <div class="v">~300M €</div>
+        </div>
+        <div class="flow-row bad">
+          <div class="l">Više sile (kontinuirano 6+ mjeseci)</div>
+          <div class="v">~250M €</div>
+        </div>
+        <div class="flow-row total bad">
+          <div class="l">Maksimalni rizik prilikom raskida</div>
+          <div class="v">500-700M €</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull">Bez izmjena 10 crvenih klauzula, posao funkcioniše samo ako sve ide dobro narednih 30 godina. Aerodromske koncesije rijetko idu dobro 30 godina.</div>
+  </div>
+</section>
+
+<!-- ============================================== TIMELINE ============================================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">05 / Trideset godina</div>
+      <h2 class="sec-title">Kada se rizik aktivira.</h2>
+      <p class="sec-desc">Mapiranje glavnih okidača kroz koncesioni period — od početka do povratnog prenosa imovine.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-line">
+        <div class="tl-segment" style="left: 0%; width: 6%; opacity: 0.4;"></div>
+        <div class="tl-segment" style="left: 8%; width: 16%; opacity: 0.7;"></div>
+        <div class="tl-segment" style="left: 30%; width: 40%; opacity: 0.3;"></div>
+        <div class="tl-segment" style="left: 90%; width: 10%; opacity: 0.7;"></div>
+
+        <div class="tl-marker above" style="left: 2%;">0<div class="annot">Datum zaključenja · plaćanje 100M €</div></div>
+        <div class="tl-marker" style="left: 16%;">5<div class="annot">Završetak Faze I · zaštita zaposlenih ističe</div></div>
+        <div class="tl-marker above" style="left: 35%;">10<div class="annot">Re-opener (preporuka analize)</div></div>
+        <div class="tl-marker" style="left: 50%;">15<div class="annot">Vrh rizika: EU akcesija završena, acquis aktivan</div></div>
+        <div class="tl-marker above" style="left: 75%;">22<div class="annot">Plan za predaju (paketi)</div></div>
+        <div class="tl-marker" style="left: 92%;">28<div class="annot">Početak procedure povratnog prenosa</div></div>
+        <div class="tl-marker above" style="left: 100%;">30<div class="annot">Predaja · povratni prenos imovine</div></div>
+      </div>
+
+      <div class="tl-axis">
+        <span>Godina 0</span>
+        <span>5</span>
+        <span>10</span>
+        <span>15</span>
+        <span>20</span>
+        <span>25</span>
+        <span>Godina 30</span>
+      </div>
+
+      <div class="tl-legend">
+        <span><span class="tl-legend-dot" style="background: var(--red); opacity: 0.7;"></span>Period koncentrovanog rizika</span>
+        <span><span class="tl-legend-dot" style="background: var(--red); opacity: 0.3;"></span>Period normalnog rada</span>
+        <span><span class="tl-legend-dot" style="background: var(--bg); border: 2px solid var(--red);"></span>Ključni datum</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== STRATEGY ============================================== -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">06 / Strategija pregovaranja</div>
+      <h2 class="sec-title">Dva nivoa. Deset crvenih linija.</h2>
+      <p class="sec-desc">Ne traži se odbacivanje koncesionog modela — traži se renegotiation prije potpisa, sa jasnom hijerarhijom prioriteta.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier tier-1">
+        <div class="tier-label">Nivo 1 · Obavezno</div>
+        <div class="tier-count">10</div>
+        <h3>Crvene linije</h3>
+        <p>Bez ovih izmjena, Ugovor se ne potpisuje. Eskalacija na nivo predsjednika Vlade i Skupštine.</p>
+        <ul>
+          <li>Suvereni imunitet <code>51.1.3</code></li>
+          <li>Aerodromski monopol <code>35.1.2(b)</code></li>
+          <li>Jezik <code>58</code></li>
+          <li>Javna politika · raskid <code>41.1(d)</code></li>
+          <li>EU acquis <code>36.5</code></li>
+          <li>Porez · uvećanje za poreze <code>P10.4</code></li>
+          <li>Naknada uz Više sile <code>34.2.8</code></li>
+          <li>Asimetrija neizvršenja obaveza <code>38</code></li>
+          <li>Garancije premale <code>30</code></li>
+          <li>Tivat sporovi <code>Predlog</code></li>
+        </ul>
+      </div>
+
+      <div class="tier tier-2">
+        <div class="tier-label">Nivo 2 · Pregovarati</div>
+        <div class="tier-count">10</div>
+        <h3>Pregovaračka soba</h3>
+        <p>Materijalne, ali se mogu pregovarati. Pola se može postići u dobro vođenoj rundi.</p>
+        <ul>
+          <li>ICC arbitraža Beč <code>50.3.5</code></li>
+          <li>Preuzimanje izvršenja · finansijeri <code>P20</code></li>
+          <li>Definicija Bruto prihoda <code>29</code></li>
+          <li>Plaćanja prilikom raskida <code>P10</code></li>
+          <li>Pravo intervenisanja <code>40</code></li>
+          <li>Kapa kazni <code>24.2</code></li>
+          <li>Slučaj više sile · obim <code>34.1</code></li>
+          <li>IFC naknada <code>31</code></li>
+          <li>Zaštita zaposlenih <code>2.2.3</code></li>
+          <li>Transparentnost <code>57</code></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== ACTIONS ============================================== -->
+<section>
+  <div class="narrow">
+    <div class="sec-head">
+      <div class="sec-num">07 / Šta sada</div>
+      <h2 class="sec-title">Šest koraka prije glasanja.</h2>
+      <p class="sec-desc">Konkretne radnje koje Skupština i nadležne komisije mogu preduzeti u narednih 60 dana.</p>
+    </div>
+
+    <div class="action-list">
+      <div class="action-item">
+        <div>
+          <h4>Tražiti cjelovit tekst mišljenja</h4>
+          <p>Ministarstvo finansija, Zaštitnik imovinsko-pravnih interesa (M.br. 37/25), Komisija za koncesije — bez rezimea, sa svim rezervama.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <h4>Pribaviti finansijski model SPV-a</h4>
+          <p>Osnovni i alternativni scenarij. Eventualno pod NDA za poslanike — ali bez crnih kutija u 30-godišnjem poslu.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <h4>Riješiti Tivat prije potpisa</h4>
+          <p>Imovinsko-pravni sporovi su izvjesna fiskalna obaveza. Razriješiti ili izuzeti sporne parcele iz koncesionog područja — ne nakon, prije.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <h4>Uslovna Odluka Skupštine</h4>
+          <p>Davanje koncesije se uslovljava ispunjenjem 10 materijalnih izmjena (Nivo 1). Rok za usklađivanje sa Konzorcijumom: 60 dana. Ako ne — postupak se vraća drugorangiranom ili ponavlja.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <h4>Stalna parlamentarna komisija</h4>
+          <p>30-godišnja koncesija preživljava 7-8 saziva. Mehanizmi nadzora moraju biti ugrađeni od dana 1: godišnji javni izvještaj, test otpornosti svake 5. godine, ponovno otvaranje u 10. godini.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <h4>Glasanje kvalifikovanom većinom</h4>
+          <p>Strateški značaj traži 2/3 većine ako poslovnik dozvoljava — uz srazmjerno učešće opozicije u komisiji za nadzor i konsultativnu ulogu civilnog sektora (MANS, Institut alternativa, CGO).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== FOOTER ============================================== -->
+<footer>
+  <div class="wrap">
+    <p><strong>Napomena o prirodi dokumenta.</strong> Ova analiza nije pravni savjet u smislu Zakona o advokaturi niti zvanični ekspertski nalaz. Sačinjena je kao instrument za nezavisno čitanje Ugovora u javnom interesu — radi parlamentarne rasprave, novinarske obrade, civilnog nadzora i zaštite imovine Crne Gore. Prije bilo kog formalnog djelovanja (amandman, prigovor, parnica) potreban je nezavisan pravni pregled kvalifikovanog advokata.</p>
+    <p><strong>Izvor:</strong> Predlog za davanje koncesije za aerodrome Podgorica i Tivat (Vlada Crne Gore) + Nacrt Ugovora o koncesiji u prilogu, sa 66 članova i 23 priloga. Sve klauzulske reference vrijede u skladu sa verzijom dostavljenom u PDF dokumentu.</p>
+    <div class="foot-meta">
+      <span>Verzija 1.0</span>
+      <span>Maj 2026</span>
+      <span>Pripremljeno · nezavisno čitanje</span>
+      <span><a href="Analiza_Ugovora_o_koncesiji_aerodroma.docx">Word verzija</a></span>
+      <span><a href="Analiza_Ugovora_o_koncesiji_aerodroma.pdf">PDF verzija</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================== MODAL ============================================== -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Zatvori">×</button>
+    <div class="modal-tag" id="m-tag"></div>
+    <h3 class="modal-title" id="m-title"></h3>
+    <div class="modal-clause" id="m-clause"></div>
+
+    <div class="modal-section">
+      <h5>Aktuelni tekst</h5>
+      <div class="modal-text modal-current" id="m-current"></div>
+    </div>
+
+    <div class="modal-section">
+      <h5>Predložena redakcija</h5>
+      <div class="modal-text modal-redline" id="m-redline"></div>
+    </div>
+
+    <div class="modal-section">
+      <h5>Obrazloženje</h5>
+      <div class="modal-text" id="m-rationale"></div>
+    </div>
+
+    <div class="modal-section" id="m-impact-wrap">
+      <h5>Poslovni i fiskalni uticaj</h5>
+      <div class="modal-text modal-impact" id="m-impact"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const findings = {
+  reds: [
+    { code: 'C1', title: 'Neopozivo odricanje od suverenog imuniteta', clause: 'čl. 51.1.3 i 51.1.4',
+      current: 'Ugovorni organ se ovim neopozivo i bezuslovno odriče, u najvećoj mjeri dozvoljenoj Primjenjivim pravom, svakog imuniteta od jurisdikcije (uključujući imunitet od tužbe, presude ili izvršenja) i svakog imuniteta od izvršenja ili sprovođenja bilo koje arbitražne ili sudske odluke koja proističe iz ovog Ugovora, u svakoj jurisdikciji.',
+      redline: 'Ugovorni organ se opozivo i uslovno odriče imuniteta, isključivo pred Međunarodnom arbitražom u skladu sa članom 50.3 i u jurisdikcijama u kojima je izričito pristao, a isključivo nad imovinom Crne Gore u komercijalnoj upotrebi. Izričito su isključene: diplomatska, vojna, kulturna imovina, monetarne rezerve Centralne banke, imovina pokrivena Bečkom konvencijom o diplomatskim odnosima (čl. 22–24).',
+      rationale: [
+        'Aktuelna formulacija predstavlja najagresivniji oblik odricanja suverenog imuniteta u međunarodnoj praksi JPP. Standard EU i OECD zemalja je tzv. „restrictive immunity doctrine" — odricanje samo nad imovinom u komercijalnoj upotrebi, sa eksplicitnom zaštitom diplomatske (Bečka konvencija o diplomatskim odnosima, 1961, čl. 22–24), vojne, kulturne, bankarske i imovine centralne banke. Crna Gora se ovdje istovremeno odriče svega.',
+        'Konkretni presedani gdje su države izgubile imovinu u inostranstvu uz manje agresivne klauzule od ove: Argentina (NML Capital, 2012) — pljenidba broda Libertad u Gani; Pakistan (Reko Diq, 2019) — ICSID presuda od 5,8 milijardi USD; Venezuela (Citgo, 2020) — američka odluka da se predaju akcije Citgo-a u korist kreditora. Sve uz manje agresivne klauzule odricanja od one u Nacrtu.',
+        'Crna Gora već ima istoriju sporova pred međunarodnim arbitražama (slučaj Tomas Vašek protiv Crne Gore pred ICSID-om 2017, potencijalni sporovi vezani za KAP i Železaru Nikšić). U svakom od tih sporova država je zadržala suverenitet nad nekomercijalnom imovinom. Ova klauzula tu zaštitu eliminisala bi.',
+        'Posebno opasna karakteristika klauzule: njena neopozivost. Buduće Skupštine ne mogu izmijeniti ovo odricanje bez raskida cijelog Ugovora — što opet aktivira plaćanja iz Priloga 10. Ustav Crne Gore u čl. 91 govori o nepovredivosti državne imovine — ovo odricanje stoji u napetosti sa tim načelom.'
+      ],
+      impact: '100–500M EUR u najgorem scenariju gubitka u međunarodnoj arbitraži. Praktične mete: računi diplomatskih predstavništava, devizne rezerve Centralne banke u stranim institucijama (Federal Reserve, ECB, BIS), kulturni predmeti u inostranim muzejima.' },
+    { code: 'C2', title: 'Faktički monopol aerodroma za 30 godina', clause: 'čl. 35.1.2(b) + Prilog 10 · 1.2',
+      current: 'Značajna nepovoljna mjera države: (b) izgradnja novog međunarodnog aerodroma sa komercijalnim uslugama u Crnoj Gori, osim Aerodroma Berane, Aerodroma Ulcinj i Aerodroma Nikšić. U tom slučaju Vlada plaća: 100% senior duga + Inicijalni sopstveni kapital + 3 god. povrata kapitala + otpremnine + troškove podizvođača + troškove prenosa.',
+      redline: 'Brisati tačku (b) u cjelosti, ili je zamijeniti: (b) eksproprijacija postojećih komercijalnih aerodroma Podgorica i/ili Tivat ili dodjela paralelne komercijalne koncesije za iste aerodrome trećem licu tokom Koncesionog perioda. Izgradnja novih aerodromskih kapaciteta na drugim lokacijama u Crnoj Gori — regionalnih, sezonskih, sportskih, specijalizovanih ili vojno-civilnih — ne predstavlja Značajnu nepovoljnu mjeru države.',
+      rationale: [
+        'Klauzula faktički ustupa suverenu odluku Crne Gore o sopstvenoj vazdušnoj infrastrukturi privatnom subjektu na 30 godina. Tri „dozvoljena" aerodroma (Berane, Ulcinj, Nikšić) trenutno gotovo da ne funkcionišu — što znači da je u praksi cijela teritorija države pod zabranom razvoja novih kapaciteta. Stoji u napetosti sa članom 91 Ustava (raspolaganje državnom imovinom) i čl. 21 Zakona o državnoj imovini.',
+        'Regionalna komparacija klauzula nekonkurencije: Hrvatska, Zagreb 2013 (Bouygues + ADP) — ograničenje samo na radijus od 100 km. Bugarska, Sofia 2024 (Strabag + Munich Airport) — zabrana samo aerodroma u istoj NUTS-3 regiji. Albanija, Tirana 2005/2016 — bez geografske zabrane, te je 2020. otvorila aerodrome Kukës i Vlorë bez plaćanja kompenzacije. Crna Gora bi imala najsiroviju formulaciju u regionu.',
+        'Razvojni scenariji u 30 godina koji bi aktivirali klauzulu: razvoj aerodroma u Cetinju (politički simbolički razlog za prestonicu), na sjeveru (Pljevlja zbog povezivanja sa Bosnom i Srbijom), u Boki (Kotor za kruzersku publiku), ili specijalizovanog aerodroma za velike događaje u Budvi. Sve realno mogući scenariji.',
+        'Posebno opasno za NATO obaveze: ako se neki od postojećih sportskih aerodroma (Žabljak, Šasi) komercijalizuje za potrebe NATO partnerstava ili humanitarnih operacija, klauzula bi se mogla interpretirati kao prekršena, čime se aktivira kompenzacija od 500M+ EUR.'
+      ],
+      impact: '500M+ EUR ako neki budući parlament odluči razvijati nove aerodromske kapacitete. Pored direktne novčane obaveze, gubi se i strategijska sloboda Crne Gore da sama odlučuje o vazdušnoj infrastrukturi.' },
+    { code: 'C3', title: 'Engleska verzija preovladava nad crnogorskom', clause: 'čl. 58',
+      current: 'Ugovor je zaključen na crnogorskom i engleskom jeziku. U slučaju nesaglasnosti, engleska verzija će preovladati, ali Strane će u dobroj vjeri uzeti u obzir i crnogorsku verziju.',
+      redline: 'Ugovor je zaključen na crnogorskom i engleskom jeziku, pri čemu obje verzije imaju jednaku pravnu snagu. U slučaju nesaglasnosti, tumačenje će se vršiti u korist crnogorske verzije, kao verzije u službenom jeziku Crne Gore u skladu sa članom 13 Ustava. Engleska verzija se koristi kao pomoćni alat za tumačenje terminologije međunarodnog projektnog finansiranja.',
+      rationale: [
+        'Ustav Crne Gore, čl. 13: „Službeni jezik u Crnoj Gori je crnogorski jezik." Zakon o službenoj upotrebi jezika i pisma (Sl. list CG 26/06) propisuje da se ugovori državnog organa zaključuju na službenom jeziku. Vlada koja ovaj Ugovor potpisuje sa engleskom verzijom kao prevladavajućom, ulazi u formalnu napetost sa Ustavom.',
+        'Regionalna praksa pokazuje da nijedna država u susjedstvu nije ustupila ovaj princip. Hrvatska, Zagreb 2013 (Bouygues + ADP): obje verzije autentične, hrvatska preovladava pred domaćim sudovima. Bugarska, Sofia 2024 (Strabag + Munich): bugarska preovladava. Albanija, Tirana 2005/2016: albanski preovladava. Srbija, Nikola Tesla 2018 (Vinci Airports): srpska i francuska jednakopravne, srpska primarna na teritoriji Srbije.',
+        'Praktične posljedice tokom 30 godina: u svakom sporu — pred ICC arbitražom u Beču, pred domaćim sudovima kada se primjenjuju prinudne odredbe MNE prava (čl. 51.1.2), pred regulatorom civilnog vazduhoplovstva — tumačenje će počivati na engleskom tekstu. Definicije „razloga javne politike", „Bruto prihoda", „Slučaja više sile", „Kvalifikovane izmjene zakona" — sve se izvode iz engleskog.',
+        'Crnogorski tekst, u toj konfiguraciji, postaje ceremonijalan dokument — fizički prisutan ali bez pravne težine kada se pojavi nesaglasnost. Za Ugovor koji preživljava 7–8 saziva Skupštine, ovo je sistemska nepravda prema budućim predstavnicima građana koji crnogorski jezik koriste u radu.'
+      ],
+      impact: 'Sistemski rizik tumačenja u korist Koncesionara u svim sporovima tokom 30 godina. Indirektni rizik: precedent za buduće strateške ugovore sa stranim subjektima.' },
+    { code: 'C4', title: 'Raskid SPV-a iz „razloga javne politike"', clause: 'čl. 41.1(d) + Prilog 10 · 1.2',
+      current: 'Projektno SPV će imati pravo da raskine ovaj Ugovor o koncesiji na osnovu: (d) razloga javne politike. U slučaju takvog raskida, primjenjuje se naknada iz Priloga 10 čl. 1.2.',
+      redline: 'Brisati tačku (d) člana 41.1 u cjelosti. Alternativno: (d) konačnu i pravosnažnu odluku Ustavnog suda Crne Gore kojom se utvrđuje da je Ugovor o koncesiji u suprotnosti sa Ustavom Crne Gore, kojom odlukom se ne može osigurati izvršenje obaveza Koncesionara, uz prethodno iscrpljivanje svih pravnih sredstava i konsultacije sa Stranama u dobroj vjeri u roku od 180 dana. Tačka (d) ne obuhvata redovne promjene vlade, izmjene zakonodavstva (pokrivene članom 36) ili druge promjene u državnoj politici.',
+      rationale: [
+        'Termin „razlozi javne politike" (public policy reasons) nije definisan ni u jednom članu Nacrta. To je pravna formulacija sa otvorenom širinom — može značiti bilo šta od „nove Vlade" do „izmjene Ustava". Daje Koncesionaru pravo na jednostrano tumačenje.',
+        'Slični mehanizmi u stranim koncesijama gotovo isključivo su rezervisani za Vladu (ne za koncesionara) i to za izuzetne situacije nacionalne bezbjednosti. Pretražene baze podataka međunarodnih JPP koncesija (World Bank PPI Database, IJ Global, Global Infrastructure Hub) ne pokazuju sličnu klauzulu u nijednoj aerodromskoj koncesiji izvan razvijenih tržišta.',
+        'Primjeri kada su slične formulacije iskorišćene protiv investitora (a ne od strane investitora): Bolivijska Aguas del Tunari (Bechtel, 2000) — Bolivija raskinula koncesiju, kasnije dobila 50M USD obavezu. Argentina 2001–2002 (Emergency Powers) — 30+ ICSID arbitraža, ukupno 6+ milijardi USD obaveza. Ali u svim ovim slučajevima državi je trebalo godine arbitraže da bi izgubila.',
+        'Hipotetički scenario po Nacrtu: 2030. Skupština usvaja zakon o jačanju domaće aviokompanije ili prioritizaciji regionalnih letova. Koncesionar proglasi to „razlogom javne politike" i raskine Ugovor. Po Prilogu 10 čl. 1.2, država duguje: 100% senior duga + inicijalni kapital + 3 godine povrata kapitala + otpremnine + troškovi podizvođača = 300–700M EUR. Bez zaštite imuniteta (C1), država ne može odbraniti svoju imovinu u inostranstvu.',
+        'Klauzula kombinuje tri opasna svojstva: jednostrana je (samo SPV može aktivirati), nedefinisana (nema kriterijuma) i skupa (puna kompenzacija). U pregovaranju, ova tačka mora biti ili izbrisana ili reformulisana sa preciznim kriterijumima.'
+      ],
+      impact: '300–700M EUR u slučaju neprecizirane političke promjene koju Koncesionar interpretira kao osnov za raskid. Stvarni rizik raste ako Koncesionar bude osjetio da Vlada želi renegotiation ili izmjene Ugovora — može da „pobjegne unaprijed".' },
+    { code: 'C5', title: 'EU acquis rizik prebačen na državu', clause: 'čl. 36.5',
+      current: 'Ako Kvalifikovana izmjena zakona proizilazi iz transpozicije EU acquis-a i SPV se izloži dodatnom Kapitalnom trošku većem od 2.000.000 EUR, Vlada kompenzuje SPV kroz prebijanje sa Koncesionom naknadom.',
+      redline: 'U slučaju da Kvalifikovana izmjena zakona predstavlja transpoziciju EU acquis-a u domaće zakonodavstvo Crne Gore, SPV neće imati pravo na naknadu osim ako je izmjena: (a) bila razumno nepredvidiva u trenutku zaključenja Ugovora; (b) prouzrokovala dodatne Kapitalne troškove veće od 5.000.000 EUR po pojedinačnoj izmjeni; (c) odnosila se isključivo na Aerodromske usluge a ne na aerodromske operatore generalno. U svim slučajevima, SPV snosi prvih 5.000.000 EUR troškova kao komercijalni rizik.',
+      rationale: [
+        'Crna Gora je 2008. podnijela zahtjev za članstvo u EU; pregovori počeli 2012; cilj članstvo do 2028. Poglavlje 14 (Saobraćajna politika) zahtijeva potpunu transpoziciju EU vazduhoplovnog acquis-a. Ovo nije skrivena informacija — to je javna politika države već 18 godina.',
+        'Konkretne EU regulative koje će se transponovati tokom narednih 5–10 godina i koje će vjerovatno aktivirati ovu klauzulu: Uredba (EZ) 1008/2008 o pravilima pristupa tržištu vazdušnog saobraćaja; Direktiva 2009/12/EZ o aerodromskim naknadama (može direktno smanjiti prihod SPV-a); Uredba (EU) 2018/1139 o EASA pravilima; Uredba (EU) 2019/494 o aerodromskim slotovima; Single European Sky paket; Direktiva 2003/96/EZ o oporezivanju energenata u avio gorivu.',
+        'Procijenjeni godišnji CAPEX za usklađivanje aerodromske infrastrukture sa EU pravilima: 5–15M EUR. Akumulirano kroz 30 godina: 150–450M EUR. Sa pragom od 2M EUR za aktiviranje kompenzacije, virtuelno svaka materijalna regulatorna izmjena će dati SPV-u osnov za zahtjev.',
+        'Princip međunarodnog projektnog finansiranja je da koncesionar snosi „rizik regulatorne promjene koja se mogla predvidjeti" (foreseeable regulatory change risk). EU pridruživanje Crne Gore je javna politika već 18 godina — svako razumno informisano lice je moralo očekivati transpoziciju. Korejski Konzorcijum je u stručnom kapacitetu da procijeni taj rizik, i taj rizik treba da bude uračunat u njihovu cijenu, ne prebačen na poreske obveznike Crne Gore.',
+        'Posebno opasna formulacija „Strane će razmatrati i dogovoriti" uz mehanizam arbitraže iz čl. 36.6 daje SPV-u poluga za pokretanje arbitraže za svaku regulatornu izmjenu, što stvara hroničan pravni rizik za Vladu tokom 30 godina.'
+      ],
+      impact: '50–200M EUR akumulirano kroz 30 godina samo iz EU acquis transpozicije. Pored direktne novčane obaveze, Vlada gubi pregovaračku poziciju u EU pristupnim pregovorima ako svaka transpozicija stvara fiskalnu obavezu.' },
+    { code: 'C6', title: 'Solidarna i neograničena obaveza uvećanja za poreze', clause: 'Prilog 10 · čl. 4',
+      current: 'Ako naknada prilikom raskida podliježe oporezivanju u Crnoj Gori, Ugovorni organ snosi solidarnu i neograničenu odgovornost i dužan je da isplati SPV dodatni iznos koji će SPV dovesti u isti neto položaj nakon oporezivanja u kojem bi bilo da naknada nije bila predmet oporezivanja.',
+      redline: 'Ako naknada prilikom raskida podliježe oporezivanju u Crnoj Gori, SPV snosi pun iznos tog poreza kao svoju redovnu poresku obavezu. Ugovorni organ nije obavezan na plaćanja uvećanja za poreze niti preuzimanje poreskih obaveza SPV-a. Eventualne poreske olakšice, oslobađanja ili kreditni mehanizmi mogu biti predmet posebnog sporazuma između Strana, koji ne može povećati obavezu Ugovornog organa van iznosa propisanih ovim Prilogom.',
+      rationale: [
+        '„Solidarna i neograničena odgovornost" Ugovornog organa za poreske obaveze drugog lica je pravni termin iz čl. 415 crnogorskog Zakona o obligacionim odnosima — znači da Vlada može biti tužena za pun iznos poreza koji Koncesionar duguje državi. To je obrnuti pravni odnos: Koncesionar duguje porez Crnoj Gori, ali tu obavezu plaća Crna Gora samoj sebi kroz Koncesionara.',
+        'Matematički primjer: pretpostavimo naknadu prilikom raskida od 500M EUR i poresku obavezu Koncesionara po MNE pravu od 9% (porez na dobit) = 45M EUR. Po Nacrtu, Vlada plaća dodatnih 45M EUR. Ali na tih 45M EUR opet je porez 9% = 4,05M EUR. I tako iterativno do konvergencije — ukupno dodatno opterećenje ~49,5M EUR (oko 10% iznad nominale). Ako se računaju i PDV i komunalne takse, opterećenje raste do 15%.',
+        'Princip neutralnosti poreza u OECD Model Tax Convention (čl. 10–12) važi samo za inostrane poreze po odbitku (cross-border withholding tax) — kada su prihodi oporezovani u dvije države. Domaći porezi su redovan trošak poslovanja koncesionara — investitor procjenjuje stopu domaćeg poreza i uračunava je u IRR.',
+        'Komparacija sa regionom: Hrvatska, Zagreb 2013 — SPV snosi sve domaće poreze. Bugarska, Sofia 2024 — isti princip. Slovenija, JZ Maribor 2008 — isti princip. Albanija, Tirana 2016 — isti princip. Crna Gora bi bila jedina država u regionu sa gross-up obavezom za domaće poreze.'
+      ],
+      impact: 'Dodatno povećanje plaćanja prilikom raskida za 10–15%. Na 500M EUR primarne naknade — dodatnih 50–75M EUR. Plus, ova klauzula stvara strukturni problem: Koncesionar nema podsticaj da bilo šta čini u smjeru smanjenja domaće poreske obaveze, jer je sve preneseno na Vladu.' },
+    { code: 'C7', title: 'Koncesiona naknada se plaća tokom Više sile', clause: 'čl. 34.2.8',
+      current: 'Nastanak Slučaja više sile neće uticati na obavezu Projektnog SPV da plati Godišnju koncesionu naknadu.',
+      redline: 'Tokom trajanja Slučaja više sile, obaveza Projektnog SPV da plati Godišnju koncesionu naknadu se: (a) obustavlja u potpunosti ako Slučaj više sile sprječava više od 50% Aerodromskih usluga tokom najmanje 30 dana; (b) srazmjerno umanjuje za procenat smanjenja Bruto prihoda tokom Slučaja više sile, ako je to smanjenje manje od 50%. Kumulativno odlaganje plaćanja Koncesione naknade ne može preći 12 mjeseci, nakon čega se aktiviraju mehanizmi iz čl. 34.3 (Produženje koncesionog perioda).',
+      rationale: [
+        'Klauzula je interno nekonzistentna sa čl. 34.2.3 koji oslobađa SPV pružanja Aerodromskih usluga tokom Više sile (jer ne može). Istovremeno, čl. 34.2.8 zahtijeva nastavak plaćanja Godišnje koncesione naknade na nulto-prihod. Ne može Koncesionar istovremeno biti oslobođen prihoda i obavezan platiti njegov procenat.',
+        'COVID-19 je realan test ovih klauzula. Globalno, aerodromi su izgubili 70–90% saobraćaja u 2020–2021. Reakcije koncesionara: Manila NAIA (Filipini) — renegotiation, smanjenje naknade na 50%, produženje za 2 godine. Mumbai (Indija, GVK) — SPV otišao u stečaj jer je morao plaćati naknadu bez prihoda. Mexico City (OMA, Aleatica) — naknada smanjena za 60% tokom 18 mjeseci. Sao Paulo (CCR) — plaćanje suspendovano 12 mjeseci.',
+        'Crnogorski aerodromi su tokom 2020. izgubili 78% saobraćaja (sa 2,5M putnika na 550 hiljada). Da je ovaj Ugovor bio na snazi, Konzorcijum bi morao platiti oko 18M EUR naknade na minimalan prihod. Niko se tome ne bi mogao opirati racionalno — koncesionar bi svakako tražio izlaznu strategiju.',
+        'Logična posljedica klauzule: Koncesionar će u prvim mjesecima ozbiljne Više sile aktivirati raskid iz čl. 34.4 (raskid zbog produženog trajanja Više sile, nakon 6 mjeseci) i zahtijevati punu kompenzaciju iz Priloga 10 čl. 3 — umjesto da prosto obustavi naknadu. To je matematički izbor.',
+        'Standardna međunarodna praksa: za vrijeme Slučaja više sile koji obustavlja operacije, koncesiona naknada se obustavlja ili srazmjerno umanjuje. Ovo je odraženo u koncesijama Mexico, Manila, Mumbai (poslije renegotiation-a), Sao Paulo, Lima.'
+      ],
+      impact: 'U slučaju ozbiljnog Slučaja više sile (npr. pandemija, oružani sukob, ekstremna klimatska situacija) SPV će na 6+ mjeseci tražiti raskid umjesto obustave — što aktivira kompenzaciju od ~250M EUR po formuli iz Priloga 10 čl. 3.' },
+    { code: 'C8', title: 'Asimetrija slučajeva neizvršenja obaveza', clause: 'čl. 38.1 vs. 38.2',
+      current: 'Neizvršenje obaveza SPV-a (čl. 38.1): 14 kategorija (insolventnost, povreda Koncesionih dokumenata, povreda Dokumenata o finansiranju, korupcija, kašnjenje 180 dana, propust garancija, prevarne radnje, itd.). Neizvršenje obaveza Vlade (čl. 38.2): samo 2 kategorije (neplaćanje 90 dana, materijalno kršenje 60 dana). Period otklanjanja za imovinske sporove (39.2.3): 8 mjeseci za Vladu.',
+      redline: 'Proširiti čl. 38.2 (Neizvršenje obaveza Vlade) tako da uključi: (c) neizdavanje Saglasnosti od strane Ugovornog organa kada je to njegova obaveza; (d) povredu izričitih obaveza saradnje po čl. 4 i 8; (e) povredu izjava i garancija u čl. 48.3. Period otklanjanja za imovinske sporove (39.2.3) smanjiti sa 8 mjeseci na 90 dana, uz mogućnost produženja od 90 dana uz pisani dogovor obje Strane. Eliminisati ili strogo definisati čl. 38.1(c)(ii) — povreda Dokumenata o finansiranju ne treba aktivirati raskid Ugovora o koncesiji.',
+      rationale: [
+        'Asimetrija default kategorija u koncesijama je očekivana — SPV preuzima više operativnog rizika i preuzima više pojedinačnih obaveza. Ali odnos mora biti razuman. Regionalna komparacija odnosa SPV : Vlada default kategorija:',
+        'Hrvatska, Zagreb 2013: 9 vs. 4 — odnos 2,25:1. Bugarska, Sofia 2024: 11 vs. 5 — odnos 2,2:1. Albanija, Tirana 2016: 10 vs. 4 — odnos 2,5:1. Srbija, Nikola Tesla 2018: 12 vs. 5 — odnos 2,4:1. Crna Gora ovaj nacrt: 14 vs. 2 — odnos 7:1, najveća asimetrija u regionu.',
+        'Najopasnija kategorija u čl. 38.1: tačka (c)(ii) — bilo kakva bitna povreda Dokumenata o finansiranju koja daje Finansijerima pravo da ubrzaju plaćanje duga ili traže naknadu. Ovo prebacuje cijelu odgovornost finansijskog odnosa SPV-a sa Vladom van kontrole Vlade. Praktično: ako SPV propusti finansijski izvještaj, ili prekrši finansijski covenant — Vlada može izgubiti koncesiju. Banka u Seulu, Frankfurtu ili Londonu može svojim odlukama uticati na sudbinu crnogorskih aerodroma.',
+        'Period otklanjanja od 8 mjeseci za imovinske sporove (čl. 39.2.3) je posebno indikativan. Standardni period u međunarodnoj praksi je 60 dana. 8 mjeseci je 16x duže — što jasno reflektuje znanje obje strane Ugovora da Tivat imovinski sporovi nisu razriješeni i da se očekuju produženi rokovi.',
+        'Posljedica asimetrije: u 30-godišnjem periodu, vjerovatnoća aktiviranja default-a na strani SPV-a je matematički znatno veća nego na strani Vlade. Ali svaki SPV default daje SPV-u motivaciju da pregovara o izlazu — sa naknadom po Prilogu 10 — umjesto da ispravi default.'
+      ],
+      impact: 'Vjerovatnoća raskida na strani SPV-a 7–10x veća nego na strani države. SPV ima faktički opciju izlaska sa naknadom u brojnim scenarijima, dok Vlada ima vrlo uske mehanizme zaštite javnog interesa.' },
+    { code: 'C9', title: 'Nedovoljne garancije za izvršenje', clause: 'čl. 30.1, 30.2, 30.3',
+      current: 'Sredstvo obezbjeđenja za Zatvaranje: 2M EUR (do Finansijskog zatvaranja). Sredstvo obezbjeđenja za izvršenje: 8M EUR (do 30 dana nakon Potvrde o završetku radova). Garancija za dobro izvršenje: 5M EUR (godišnja, tokom cijelog koncesionog perioda). Ukupno: 15M EUR za stratešku imovinu vrijednu 1,4+ milijarde EUR.',
+      redline: 'Sredstvo obezbjeđenja za Zatvaranje: 5M EUR. Sredstvo obezbjeđenja za izvršenje: 25M EUR (oko 19% inicijalne CAPEX od 132M), kao bezuslovna bankarska garancija na prvi poziv ili međunarodno priznata insurance bond. Garancija za dobro izvršenje: 15M EUR godišnje + 5% kumulativnog godišnjeg prihoda Aerodroma za prethodnu godinu, što god je veće. Dodati: Garancija za održavanje (Maintenance Bond) od 10M EUR za period između godine 25 i kraja koncesije.',
+      rationale: [
+        'World Bank PPP Reference Guide (3. izdanje, 2017) preporučuje minimum 20–30% inicijalne CAPEX kao Garanciju za izvršenje. IFC PPP Guide (2019) dodaje preporuku za Garanciju za održavanje (Maintenance Bond) u kasnijim godinama koncesije, kao osiguranje da će se imovina vratiti u dobrom stanju.',
+        'Regionalna komparacija — Garancija za izvršenje kao procenat inicijalne CAPEX: Sofia 2024 — 50M EUR / 220M CAPEX = 22,7%. Zagreb 2013 — 64M EUR / 250M CAPEX = 25,6%. Tirana 2016 — 28M EUR / 110M CAPEX = 25,5%. Crna Gora ovaj nacrt — 8M EUR / 132M CAPEX = 6,1%. Daleko ispod regionalnog standarda — gotovo četvrtina onoga što je norma.',
+        'Specifični nedostatak: Garancija za održavanje za godine 25–30 ne postoji u Nacrtu. To znači da na kraju koncesije (godina 30), Vlada nema finansijski mehanizam za osiguranje da će se imovina vratiti u dobrom stanju. Iskustvo iz drugih koncesija pokazuje da SPV-ovi u zadnjim godinama smanjuju ulaganja u održavanje da maksimiziraju profit pred predaju.',
+        'Godišnja Garancija za dobro izvršenje od 5M EUR može biti manja od godišnjeg iznosa kumulativnih ugovornih kazni za neispunjenje usluga (Maksimalna gornja granica iz Priloga 13 — nepoznata u dostupnom dijelu Nacrta, ali standardni nivo je 5–15% godišnjeg Bruto prihoda, što za prosječni prihod od 50M EUR daje 2,5–7,5M EUR). Ako kazne premaše garanciju, Vlada ostaje bez sigurnog sredstva naplate.',
+        'Posebno opasno: garancije ne pokrivaju potencijalnu obavezu Vlade prilikom raskida (300–700M EUR po Prilogu 10). Garancije su jednosmjerno — SPV daje Vladi — ali Vlada nema simetrične garancije svoje obaveze pri raskidu.'
+      ],
+      impact: 'Direktna izloženost Vlade riziku neizvršenja od 110–200M EUR (razlika između stvarne potrebe i garantovanog iznosa). Dodatno, na kraju koncesije rizik vraćanja zapuštene imovine.' },
+    { code: 'C10', title: 'Tivat imovinski sporovi — preneseni rizik', clause: 'Predlog Vlade + čl. 39.2.3',
+      current: 'Predlog Vlade: „...na lokaciji aerodroma Tivat... postoji značajan broj neriješenih imovinsko-pravnih sporova, koji potencijalno mogu da ugroze dinamiku izvršenja ugovorenih obaveza, odnosno posljedično i da izazovu eventualno aktiviranje raskidnih klauzula i odštetnih zahtjeva..." Čl. 39.2.3 propisuje period otklanjanja od 8 mjeseci za Vladu u slučaju imovinsko-pravnih sporova (umjesto standardnih 60 dana).',
+      redline: 'Prije potpisivanja Ugovora o koncesiji, Vlada je dužna da: (a) izvrši pravnu reviziju svih katastarskih parcela na lokaciji Aerodrom Tivat sa identifikacijom svih neriješenih sporova; (b) razriješi sporove ili obezbijedi pravne osnove (eksproprijacija, javnobeležnička isprava); (c) eksplicitno iz koncesionog područja izuzme parcele koje su predmet spora; (d) o tome izvijesti Skupštinu i Komisiju za koncesije prije Datuma zaključenja. U Ugovor unijeti odredbu: „Datum zaključenja ne može nastupiti dok Vlada ne dostavi Projektnom SPV izvještaj o završetku imovinsko-pravne due diligence procedure za koncesiono područje, sa pozitivnom ocjenom Zaštitnika imovinsko-pravnih interesa."',
+      rationale: [
+        'Vlada Crne Gore svjesno ulazi u Ugovor sa znanjem o postojanju imovinsko-pravnih sporova koji mogu da aktiviraju raskidne klauzule. Predlog Vlade je u tom dijelu eksplicitan — sporovi „mogu da izazovu eventualno aktiviranje raskidnih klauzula i odštetnih zahtjeva". To je izvjestan rizik, ne hipotetički.',
+        'Priobalni dio Tivta je predmet decenije imovinskih sporova još od denacionalizacije 1990-ih i privatizacija počev od 2000-ih (Solana Bajo Sekulić, Arsenal Tivat, vojni objekti JNA, crkvena imovina). Iz javno dostupnih izvora, aktivno se vode sporovi sa naslednicima porodica čija je imovina nacionalizovana ili eksproprisana 1945–1990, sporovi sa privatnim investitorima koji su otkupili bivše vojne objekte, sporovi sa Crnogorskom Pravoslavnom Crkvom. Eksproprijacija je u toku za niz parcela — Prilog 11 Ugovora već isključuje parcele 1232/2 i 1268/2 KO Đuraševići.',
+        'Pravni okvir: Zakon o nepokretnostima (Sl. list CG 19/09), Zakon o eksproprijaciji (Sl. list CG 55/00, izmjene 71/17), presuda Ustavnog suda CG 137/05 o zaštiti svojine. Prosječno vrijeme rješavanja imovinskog spora kroz sve instance u Crnoj Gori: 7–12 godina.',
+        'Sa stanovišta čl. 9 st. 4 Zakona o koncesijama, procjenu vrijednosti nepokretnosti koja je predmet koncesije vrši organ uprave nadležan za poslove imovine. Ako nije izvršena pravna provjera vlasništva, procjena vrijednosti (235M EUR zemljište + 22M objekti) je sumnjiva.',
+        'Period otklanjanja od 8 mjeseci za Vladu (čl. 39.2.3) je 16 puta duži od standardnog roka od 60 dana. Tako dug rok jasno odražava očekivanje obje strane da se sporovi neće moći brzo riješiti — što transformiše izvjesnost u fiskalnu obavezu Vlade.',
+        'Predlog Vlade traži da Skupština „zaduži nadležne državne organe da u okviru svojih ingerencija osiguraju" rješavanje sporova — što je politička, a ne zakonska obaveza. Zakonska obaveza je potrebna da se izbjegne automatsko aktiviranje raskidnih klauzula.'
+      ],
+      impact: 'Procijenjeni rizik aktiviranja: vjerovatnoća 40–60% u prvih 10 godina; očekivana obaveza po Prilogu 10 čl. 1.2 ili 2.1 — 300–500M EUR. Ovo nije najgori scenarij — ovo je očekivani scenarij ako se sporovi ne riješe prije potpisa.' },
+  ],
+  yellows: [
+    { code: 'Z1', title: 'ICC arbitraža u Beču', clause: 'čl. 50.3.5',
+      current: 'Sjedište arbitraže je Beč, pravila Međunarodne trgovačke komore (ICC), 3 arbitra, jezici engleski (usmeni postupak) + crnogorski (dokumenti). Trošak 3-arbitražne ICC za spor 100M EUR: 800.000–1.500.000 EUR po strani.',
+      redline: 'Razmotriti alternativne lokacije i pravila: Hag (PCA — Stalni arbitražni sud, UNCITRAL pravila), Brisel (CEPANI), Ljubljana (PAC — Stalni arbitražni sud Slovenije). Arbitri moraju imati iskustvo u međunarodnom infrastrukturnom finansiranju i znanje balkanskog prava. Smanjiti broj arbitara sa 3 na 1 za sporove ispod 10M EUR — što značajno smanjuje trošak.',
+      rationale: [
+        'ICC arbitraža u Beču je legitimno rješenje, ali ne najpovoljnije za Crnu Goru. Beč ima jaku tradiciju komercijalne arbitraže, ali arbitri imenovani po ICC pravilima dolaze pretežno iz zapadne Evrope i sjeverne Amerike, sa slabim poznavanjem balkanskog prava i konteksta.',
+        'Komparacija alternativa za spor 100M EUR: ICC Beč — 3-arbitražna stručnost; ukupno 800k–1,5M EUR po strani (administrativne takse + arbitri + advokati). PCA Hag (UNCITRAL pravila) — 30–40% jeftinije, neutralnija praksa za male države. CEPANI Brisel — belgijski arbitri sa balkanskim iskustvom, jezičke barijere manje. PAC Ljubljana — blizu, regionalno pravo poznato, najmanji troškovi.',
+        'Specifična briga: jezici postupka su engleski (usmeni) i crnogorski (dokumenti). U praksi, sve usmene rasprave biće na engleskom — što favorizuje stranu sa boljim engleskim pravnicima i pripremnim resursima.',
+        'Regionalne reference: Hrvatska je za Zagreb 2013 izabrala ICC Pariz. Bugarska za Sofiju 2024 — VIAC Beč ali sa CEPANI Brisel kao alternativom za sporove ispod 10M EUR. Srbija za Nikola Tesla 2018 — ICC Pariz. Albanija za Tiranu 2016 — UNCITRAL Hag. Crna Gora ima fleksibilnost da pregovara u korist alternative.'
+      ],
+      impact: '1–3M EUR po sporu direktni trošak (više sporova tokom 30 godina). Indirektni: udaljenost foruma od domaćeg pravosuđa i kulture, asimetrija pravnih resursa između države i Konzorcijuma.' },
+    { code: 'Z2', title: 'Prava finansijera na preuzimanje izvršenja', clause: 'Prilog 20',
+      current: 'Period obustave 60 dana nakon Obavještenja o neizvršenju. Finansijeri mogu imenovati zamjenu SPV-a uz saglasnost Ugovornog organa (koji postupa po sopstvenoj opravdanoj diskreciji). U slučaju zamjene, produženi rok od 86 dana. Direktni ugovor sa Finansijerima sadrži odricanje od imuniteta (čl. 8 Priloga 20).',
+      redline: 'Definisati precizne kriterijume za saglasnost Ugovornog organa na zamjenu SPV-a: (a) potencijalni naslednik mora imati iste tehničke i finansijske kvalifikacije koje su važile na pretkvalifikaciji 2019; (b) naslednik ne smije biti pravno lice iz države koja je predmet sankcija EU ili UN; (c) Ugovorni organ ima pravo veta na zamjenu iz razloga nacionalne bezbjednosti, sa pisanim obrazloženjem. Maksimalni step-in rok od 120 dana ne može se produžavati bez ponovljene saglasnosti Ugovornog organa. Odricanje od imuniteta u Direktnom ugovoru ograničiti istim okvirom kao u C1 (samo komercijalna imovina).',
+      rationale: [
+        'Mehanizam preuzimanja izvršenja (step-in) od strane finansijera je standardan u međunarodnom projektnom finansiranju (London Court of International Arbitration smjernice, World Bank PPP Reference Guide). Bez ovog mehanizma, banke ne bi finansirale projekat — što bi cijela koncesija bila bez resursa.',
+        'Standardni okviri u međunarodnoj praksi: period obustave 60–180 dana, pravo Vlade na veto kod zamjene SPV-a, pravo Vlade da definiše kvalifikacije naslednika, eksplicitna isključenost subjekata pod sankcijama. Nacrt većinu ovih elemenata sadrži — pitanje je preciznosti formulacije.',
+        'Konkretni rizici nepoželjnog naslednika ako kriterijumi nisu precizni: subjekt iz države koja je u sporu sa NATO (Crna Gora ima NATO obaveze od 2017); subjekt sa istorijom korupcijskih sporova; subjekt iz off-shore jurisdikcije bez transparentnog vlasništva; konkurentska aviokompanija koja bi mogla zloupotrijebiti aerodromsku poziciju (npr. preusmjeravanje letova).',
+        'Posebno važno za Crnu Goru: blizina vojnih objekata u Podgorici i status NATO članice znače da naslednik mora prolaziti rigoroznu bezbjednosnu provjeru. Ovo treba izričito ugraditi u Direktni ugovor sa Finansijerima (Prilog 20) — sa pravom Vlade da odbije naslednika iz bezbjednosnih razloga, bez prava finansijera na arbitražu te odluke.'
+      ],
+      impact: 'Strateški rizik nepoželjnog naslednika koji bi mogao kompromitovati nacionalnu bezbjednost ili NATO obaveze. Direktni rizik: produženje roka preuzimanja izvršenja tokom kojeg SPV ne pruža kvalitetnu uslugu, sa štetom za putnike i turistički sektor.' },
+    { code: 'Z3', title: 'Definicija „Bruto prihoda"', clause: 'čl. 29 + definicije iz čl. 1.1',
+      current: 'Procenat 35,21% obračunava se na osnovu Bruto prihoda iz nerevidiranih polugodišnjih izvještaja Projektnog SPV. Definicija Bruto prihoda iz čl. 1.1 nije citirana u dostupnom dijelu Nacrta — mora se posebno provjeriti u Aneksu Definicija.',
+      redline: 'Bruto prihod treba da uključuje sve prihode SPV-a bez izuzetaka, uključujući: (a) Avijacijski prihod (aerodromske takse, naknade za korišćenje terminala, zemaljska obrada); (b) Neavijacijski prihod (zakup retail prostora, parking, mjenjačnice, hoteli, oglašavanje, bescarinska prodaja, taksi, transportne usluge); (c) Sve prihode od zakupa Aerodromskih lokacija trećim licima; (d) Sve prihode od zajedničkih ulaganja, partnerstava i poslovnih jedinica; (e) Prihod od osiguranja u dijelu koji nadoknađuje izgubljeni operativni prihod. Isključenja se moraju eksplicitno navesti i biti minimalna (npr. samo iznos PDV-a koji se prenosi državi). Ugovorni organ ima pravo na godišnji audit Bruto prihoda preko nezavisnog revizora po njegovom izboru.',
+      rationale: [
+        'Definicija Bruto prihoda je možda najvažnija ekonomska klauzula cijelog Ugovora. Razlika između Incheonovih 35,21% i drugorangirane ponude Corporation America Airports (17,28%) je 17,93 procentnih poena. Na 30 godina i prosječni godišnji prihod od 50M EUR, to čini razliku od oko 270M EUR koju Vlada dobija — ali samo ako je osnova obračuna (Bruto prihod) široko definisana.',
+        'Tipične zamke u definicijama Bruto prihoda u JPP koncesijama: isključenje neavijacijskih prihoda (retail, parking, hoteli, oglašavanje) — može smanjiti osnovu za 30–50%; prebijanje „rabata" za aviokompanije (Lufthansa partneri, Star Alliance) — može smanjiti za dodatnih 10–15%; odbici za „troškove naplate" — može biti i 20%; prebijanje sa kapitalnim ulaganjima (depreciation deductible); isključenje prihoda iz „strateških partnerstava" sa povezanim licima.',
+        'Regionalna komparacija: Hrvatska, Zagreb 2013 — Bruto prihod uključuje sve prihode, samo PDV isključen, sa definicijom u Aneksu 12. Bugarska, Sofia 2024 — detaljna definicija u Aneksu 8, sa godišnjim auditing pravom Vlade preko nezavisnog revizora. Albanija, Tirana 2016 — slično, sa kvartalnim revizorskim izvještajima.',
+        'Bez kontrolisanog auditing prava Ugovornog organa (potrebno provjeriti čl. 19 Nadzor), SPV ima diskreciju u utvrđivanju Bruto prihoda. Naročito problematično što su izvještaji „nerevidirani polugodišnji" — ovo treba zamijeniti zahtjevom za revidirane izvještaje na godišnjoj osnovi.'
+      ],
+      impact: 'Razlika u definiciji Bruto prihoda može značiti 10–50M EUR godišnje izgubljene naknade. Akumulirano kroz 30 godina, ovo je 300M–1,5B EUR potencijalnog gubitka — što sam mijenja ekonomsku ravnotežu posla.' },
+    { code: 'Z4', title: 'Formula plaćanja prilikom raskida', clause: 'Prilog 10',
+      current: 'Neizvršenje obaveza SPV (čl. 1.1): 100% Neizmirenog prioritetnog duga – Troškovi novog Tendera (gornja granica 1,2M) – Prihodi iz osiguranja. Plaća se 12 mjeseci nakon Datuma raskida. Neizvršenje obaveza Vlade ili „javna politika" (čl. 1.2): 100% senior duga + Inicijalni sopstveni kapital + Povrat sopstvenog kapitala do 3 godine + Otpremnine + Troškovi podizvođača + Troškovi prenosa. Plaća se 3 mjeseca nakon (može se odložiti do 12 mjeseci).',
+      redline: 'Limit Troškova novog Tendera: ukloniti gornju granicu od 1,2M EUR (ili dignuti na 5M EUR), jer stvarni trošak ponovljenog tendera u prosjeku iznosi 3–7M EUR. Dodati klauzulu o mitigaciji: Vlada može vratiti SPV u prvobitno stanje ako u roku od 6 mjeseci ukloni uzrok Značajne nepovoljne mjere države, što oslobađa Vladu od plaćanja po čl. 1.2. Period odlaganja plaćanja u svim slučajevima može se produžiti do 24 mjeseca sa zateznom kamatom ne većom od EURIBOR + 200 baznih poena. Povrat sopstvenog kapitala ograničiti na 1 godinu umjesto 3 godine, ili eliminisati u potpunosti.',
+      rationale: [
+        'Plaćanja prilikom raskida su najvažniji mehanizam za određivanje krajnje izloženosti države. Aktuelna formula iz Priloga 10 daje Koncesionaru praktično punu sigurnost povrata kapitala u svim slučajevima osim sopstvenog neizvršenja obaveza — što ne odgovara komercijalnom riziku koji bi trebalo da snosi privatni investitor.',
+        'Analiza pojedinih komponenti iz čl. 1.2 Priloga 10: 100% senior duga — standardno u međunarodnoj praksi (finansijeri moraju biti zaštićeni). Inicijalni sopstveni kapital minus raspodjele — sporno, jer sopstveni kapital je risk capital. Povrat sopstvenog kapitala do 3 godine — to je 30–40% NPV inicijalnog kapitala, suštinski garancija profita. Otpremnine za zaposlene — opravdano. Troškovi podizvođača — opravdano ali sa kapom. Troškovi prenosa — opravdano.',
+        'Komparativna praksa za povrat sopstvenog kapitala: Hrvatska Zagreb 2013 — nije garantovan. Bugarska Sofia 2024 — garantovan do 1 godine. Filipini NAIA — nije garantovan. Albanija Tirana 2016 — garantovan do 1 godine. Crna Gora ovaj nacrt — 3 godine, najveći benefit za koncesionara u regionu.',
+        'Kalkulacija: na inicijalni kapital od ~30M EUR (procjena 22% od 132M CAPEX), 3 godine povrata po IRR 12,27% daje cca 10–12M EUR dodatne kompenzacije. Ali ako se aktivira na većoj investiciji posle 10–15 godina, broj može biti 50–100M EUR.',
+        'Posebno problematičan limit od 1,2M EUR za Troškove novog Tendera: stvarni trošak ponovljenog tendera za aerodromsku koncesiju iznosi 3–7M EUR (savjetnici, pravne usluge, due diligence, marketing). Aktuelni limit znači da Vlada nadoknađuje samo trećinu stvarnog troška.'
+      ],
+      impact: 'Razlika između sadašnje i predložene formule može iznositi 50–100M EUR po raskidu. Pored direktne novčane razlike, smanjenje povrata sopstvenog kapitala mijenja motivaciju Konzorcijuma — daje mu opciju ranog izlaska sa garantovanim profitom umjesto dugoročnog upravljanja imovinom.' },
+    { code: 'Z5', title: 'Ograničeno pravo intervenisanja Ugovornog organa', clause: 'čl. 40',
+      current: 'Pravo intervenisanja samo za: (a) bitan poremećaj saobraćaja, (b) nemogućnost javnosti da bezbjedno koristi, (c) vanredne situacije, (d) prijetnja nacionalnoj bezbjednosti, ratno stanje. Ugovorni organ obavještava SPV 24 sata unaprijed. Ugovorni organ se ne smatra odgovornim za gubitak prihoda ili posljedični gubitak.',
+      redline: 'Proširiti listu okolnosti za intervenisanje: (e) nezavisni stručni nalaz o sistemskoj povredi minimalnih standarda usluga; (f) presuda nadležnog suda Crne Gore ili presuda Suda EU koja zahtijeva intervenciju; (g) javno zdravstvene mjere (pandemija, biološka prijetnja); (h) zaštita životne sredine u skladu sa članom 20.',
+      rationale: [
+        'Pravo intervenisanja u javnom interesu mora obuhvatiti više situacija nego što je u Nacrtu — posebno javno zdravstvene mjere (pandemija) i zaštita životne sredine.',
+        'Bez ovih okolnosti, Vlada nema legitiman pravni osnov da intervenisanje opravda kada se pojavi pandemija ili ekološki incident bez aktivacije raskidnih klauzula.'
+      ],
+      impact: 'Bez proširenja, država nema poluga da intervene u određenim situacijama javnog interesa bez aktiviranja raskidnih klauzula.' },
+    { code: 'Z6', title: 'Kapa za ugovorne kazne (penalty cap)', clause: 'čl. 24.2 + Prilog 13',
+      current: 'Obaveza Projektnog SPV za ugovorne kazne za svaku Godinu koncesije ograničena je na Maksimalni gornji prag (Prilog 13). Ako se maksimalna ugovorna kazna dostigne dvije uzastopne godine, to predstavlja Slučaj neizvršenja (čl. 38.1(h)).',
+      redline: 'Provjeriti i u Ugovoru izričito navesti iznos Maksimalnog gornjeg praga iz Priloga 13. Ako je prag manji od 5% godišnjeg Bruto prihoda — pregovarati podizanje na minimum 10% godišnjeg Bruto prihoda. Dodati klauzulu: ako se Maksimalni gornji prag dostigne u jednoj koncesionoj godini, Ugovorni organ ima pravo na pojačani nadzor, dodatna periodična izvještavanja i pravo zahtijevati od SPV poseban korektivni plan (uz cure period od 60 dana).',
+      rationale: [
+        'Kapiranje ugovornih kazni u JPP je standardno, ali nivo kapa mora biti dovoljno visok da kazne stvarno utiču na ponašanje SPV-a.',
+        'Trigger za default tek nakon 2 uzastopne godine je preliberalan — omogućava SPV-u da „preživi" sa niskim učinkom 2 godine, što za putnike i privredu znači ozbiljnu štetu.'
+      ],
+      impact: 'Loš učinak SPV-a tokom 2 godine može značiti milione izgubljenih prihoda od turizma, bez automatske posljedice po SPV.' },
+    { code: 'Z7', title: 'Definicija Slučaja više sile — obim i isključenja', clause: 'čl. 34.1',
+      current: 'Slučaj više sile je široko definisan: prirodne nepogode, požar, eksplozija, radioaktivna kontaminacija, epidemije, štrajkovi nacionalnog nivoa, sudari vazduhoplova, politička dešavanja izvan Crne Gore koja traju 14 dana. Isključeno: nemar SPV-a, ekonomske poteškoće, predvidive okolnosti.',
+      redline: 'Suziti definiciju Slučaja više sile dodavanjem isključenja: (e) pandemije osim ako su proglasile WHO ili nadležni državni organ kao globalnu pandemiju i traju duže od 90 dana; (f) terorističke akte koji se odnose isključivo na Aerodrome (umjesto bilo gdje van Crne Gore); (g) sudare vazduhoplova — osim ako se odnose direktno na infrastrukturu Aerodroma i zatvaraju je duže od 60 dana. Dodati klauzulu da SPV mora dokazati uzročnu vezu između Slučaja više sile i nemogućnosti izvršenja, sa standardom dokaza „preponderance of evidence".',
+      rationale: [
+        'Aktuelna definicija je široka i može se aktivirati u brojnim slučajevima — što daje SPV-u poluga za izbjegavanje obaveza i/ili traženje produženja koncesionog perioda.',
+        'Posebno problematično: „politička dešavanja izvan Crne Gore" znači da rat u Ukrajini, blokada gasovoda, embargo na Rusiju mogu predstavljati Slučaj više sile čak i ako Crna Gora ne učestvuje.'
+      ],
+      impact: 'Široka definicija povećava vjerovatnoću Slučaja više sile što vodi produženju koncesionog perioda i/ili kompenzaciji.' },
+    { code: 'Z8', title: 'Naknada za izradu projekta IFC-u (1,2M EUR)', clause: 'čl. 31',
+      current: 'U roku od 5 dana od Datuma zaključenja, Prvorangirani ponuđač ili Projektno SPV plaća IFC-u 1.200.000 EUR Naknade za izradu Projekta. Plaća se na račun JP Morgan AG, Frankfurt, korisnik IBRD.',
+      redline: 'Razjasniti pravnu osnovu plaćanja IFC-u — na osnovu kojeg ugovora između Vlade Crne Gore i IFC-a? Provjeriti da li je iznos od 1,2M EUR razuman u poređenju sa drugim IFC mandatima. Ako Naknada predstavlja kompenzaciju za IFC kao savjetnika u tenderskom postupku, treba provjeriti da li su uslovi tog mandata javno dostupni.',
+      rationale: [
+        'IFC ima dvostruku ulogu u ovakvim projektima: savjetnik privatizacije za vladu i potencijalni finansijer za pobjednika tendera. Konflikt interesa je realan.',
+        'Naknada se plaća direktno IFC-u (preko IBRD u JP Morgan AG) — što nije transparentno kroz crnogorske finansijske institucije.'
+      ],
+      impact: 'Iznos je relativno mali (1,2M EUR), ali pitanje transparentnosti i pravne osnove je principijelno.' },
+    { code: 'Z9', title: 'Zaštita zaposlenih — 5 godina je dobro, šta nakon?', clause: 'čl. 2.2.3 + čl. 23',
+      current: 'Plan za transfer zaposlenih (čl. 2.2.3) uključuje zabranu raskida ugovora o radu sa zaposlenima na neodređeno vrijeme u roku od 5 godina nakon transfera. Nakon 5 godina nema dodatnih obaveza.',
+      redline: 'Produžiti zaštitu od raskida ugovora o radu na neodređeno vrijeme sa 5 na 10 godina. Dodati klauzulu: nakon perioda zaštite, eventualna kolektivna otpuštanja moraju biti predmet konsultacija sa Ugovornim organom najmanje 6 mjeseci unaprijed, i moraju ispunjavati uslove IFC Standarda učinka 2. Dodati obavezu: SPV mora godišnje izvještavati o nivou zaposlenosti, prosječnoj plati, kolektivnim ugovorima i mjerama bezbjednosti i zdravlja na radu.',
+      rationale: [
+        '5-godišnja zaštita je IFC standard, ali za 30-godišnju koncesiju to je samo 16,7% perioda. Nakon 5 godina, SPV može slobodno restrukturirati radnu snagu.',
+        'Sa stanovišta javnog interesa, zaposleni u strateškim infrastrukturnim sektorima zaslužuju veću zaštitu nego u običnim privatizacijama.'
+      ],
+      impact: 'Direktni socijalni rizik za oko 500 zaposlenih u Aerodromima Crne Gore d.o.o.' },
+    { code: 'Z10', title: 'Transparentnost — obaveza javnog godišnjeg izvještavanja', clause: 'čl. 57 + čl. 19',
+      current: 'Ugovor o koncesiji se može objaviti na web sajtu Ugovornog organa (čl. 57.3). Nije eksplicitno predviđena obaveza javnog izvještavanja o ključnim pokazateljima koncesije.',
+      redline: 'Dodati novi član 57.4: „Projektno SPV i Ugovorni organ će zajedno objavljivati godišnji javni izvještaj o realizaciji koncesije, koji obuhvata: (a) broj putnika i kretanja vazduhoplova; (b) bruto prihod po kategorijama; (c) plaćena koncesiona naknada; (d) izvršene investicije; (e) zaposlenost; (f) bezbjednosne incidente; (g) pritužbe putnika i njihovo rješavanje. Izvještaj se objavljuje na web sajtovima Ugovornog organa i SPV-a najkasnije 4 mjeseca nakon kraja Godine koncesije." Skupština Crne Gore ima pravo na godišnju raspravu o realizaciji koncesije, uz prisustvo predstavnika SPV-a.',
+      rationale: [
+        'Aktuelni Nacrt omogućava objavu Ugovora ali ne predviđa kontinuirano javno izvještavanje — što je standard u modernim JPP koncesijama.',
+        'Bez kontinuirane transparentnosti, kontrola Skupštine i javnosti tokom 30 godina je nominalna.'
+      ],
+      impact: 'Nedostatak transparentnosti otežava civilni i parlamentarni nadzor tokom 30 godina.' },
+  ]
+};
+
+/* ============ HEATMAP RENDERING ============ */
+function renderCards(containerId, items, severity) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = items.map((it, i) => `
+    <button class="h-card ${severity}" onclick="openModal('${severity}', ${i})" type="button">
+      <div class="h-code"><span class="pill">${it.code}</span></div>
+      <div class="h-title">${it.title}</div>
+      <div class="h-clause">${it.clause}</div>
+    </button>
+  `).join('');
+}
+renderCards('reds', findings.reds, 'red');
+renderCards('yellows', findings.yellows, 'yellow');
+
+/* ============ MODAL ============ */
+function openModal(severity, idx) {
+  const item = findings[severity === 'red' ? 'reds' : 'yellows'][idx];
+  if (!item) return;
+  const modal = document.getElementById('modal');
+  const modalBg = document.getElementById('modal-bg');
+
+  modal.className = 'modal ' + severity;
+  document.getElementById('m-tag').textContent =
+    (severity === 'red' ? 'CRVENI SIGNAL · ' : 'ŽUTI SIGNAL · ') + item.code;
+  document.getElementById('m-title').textContent = item.title;
+  document.getElementById('m-clause').textContent = item.clause;
+  document.getElementById('m-current').textContent = item.current;
+  document.getElementById('m-redline').textContent = item.redline;
+
+  const rationaleEl = document.getElementById('m-rationale');
+  rationaleEl.innerHTML = '';
+  (Array.isArray(item.rationale) ? item.rationale : [item.rationale]).forEach(p => {
+    const div = document.createElement('p');
+    div.textContent = p;
+    div.style.marginBottom = '12px';
+    rationaleEl.appendChild(div);
+  });
+
+  document.getElementById('m-impact').textContent = item.impact || '';
+  document.getElementById('m-impact-wrap').style.display = item.impact ? 'block' : 'none';
+
+  modalBg.classList.add('open');
+  modal.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-bg').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-bg') closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
+</body>
+</html>
